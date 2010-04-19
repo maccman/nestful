@@ -33,4 +33,12 @@ module Nestful
   def delete(url, options = {})
     Request.new(url, options.merge(:method => :delete)).execute
   end
+  
+  def json_get(params = nil)
+    get(:format => :json, :params => params)
+  end
+  
+  def json_post(params = nil)
+    post(:format => :json, :params => params)
+  end
 end

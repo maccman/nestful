@@ -20,11 +20,11 @@ module Nestful
     end
     
     def json_get(params = nil)
-      get(:format => :json, :params => nil)
+      get(:format => :json, :params => params)
     end
     
     def json_post(params = nil)
-      post(:format => :json, :params => nil)
+      post(:format => :json, :params => params)
     end
   end
 end
