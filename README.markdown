@@ -10,7 +10,6 @@ Nestful is a simple Ruby HTTP/REST client with a sane API.
   * Proxy support
   * SSL support
 
-
 ## Options
 
 Request options:
@@ -26,34 +25,39 @@ Connection options:
   * auth_type
   * timeout
   * ssl_options
-  
 
 ## API
   
-# GET request
-  Nestful.get 'http://example.com'
+### GET request
 
-# POST request
-  Nestful.post 'http://example.com', :format => :form
+    Nestful.get 'http://example.com'
 
-# JSON request
-  Nestful.get 'http://example.com', :format => :json
-  Nestful.post 'http://example.com', :format => :json, :params => {:q => 'test'}
+### POST request
+
+    Nestful.post 'http://example.com', :format => :form
+
+### JSON request
+
+    Nestful.get 'http://example.com', :format => :json
+    Nestful.post 'http://example.com', :format => :json, :params => {:q => 'test'}
   
-# Resource
-  Nestful::Resource.new('http://example.com')['assets'].get(:format => :xml)
+### Resource
 
-# Buffer download, return Tempfile
-  Nestful.get 'http://example.com/file.jpg', :buffer => true
+    Nestful::Resource.new('http://example.com')['assets'].get(:format => :xml)
 
-# Callbacks
-  Nestful.get 'http://www.google.co.uk', :buffer => true, :progress => Proc.new {|conn, total, size| p total; p size }
-  Nestful::Request.before_request {|conn| }
-  Nestful::Request.after_request {|conn, response| }
+### Buffer download, return Tempfile
 
-# Multipart post
-  Nestful.post 'http://example.com', :format => :multipart, :params => {:file => File.open('README')}
-  
+    Nestful.get 'http://example.com/file.jpg', :buffer => true
+
+### Callbacks
+
+    Nestful.get 'http://www.google.co.uk', :buffer => true, :progress => Proc.new {|conn, total, size| p total; p size }
+    Nestful::Request.before_request {|conn| }
+    Nestful::Request.after_request {|conn, response| }
+
+### Multipart post
+
+    Nestful.post 'http://example.com', :format => :multipart, :params => {:file => File.open('README')}
 
 ## Credits
   Large parts of the connection code were taken from ActiveResource
