@@ -1,0 +1,16 @@
+module NetFoo
+  module Formats
+    autoload :FileFormat,  'netfoo/formats/file_format'
+    autoload :FormFormat,  'netfoo/formats/form_format'
+    autoload :XmlFormat,   'netfoo/formats/xml_format'
+    autoload :JsonFormat,  'netfoo/formats/json_format'
+    
+    # Lookup the format class from a mime type reference symbol. Example:
+    #
+    #   NetFoo::Formats[:xml]  # => NetFoo::Formats::XmlFormat
+    #   NetFoo::Formats[:json] # => NetFoo::Formats::JsonFormat
+    def self.[](mime_type_reference)
+      NetFoo::Formats.const_get(ActiveSupport::Inflector.camelize(mime_type_reference.to_s) + "Format")
+    end
+  end  
+end
