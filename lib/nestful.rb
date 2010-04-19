@@ -11,6 +11,7 @@ $:.unshift(File.dirname(__FILE__))
 require "nestful/exceptions"
 require "nestful/formats"
 require "nestful/connection"
+require "nestful/request/callbacks"
 require "nestful/request"
 require "nestful/resource"
 

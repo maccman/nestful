@@ -6,14 +6,6 @@ module Nestful
       @callbacks[type] ||= []
     end
     
-    def self.before_request(method = nil, &block)
-      callbacks(:before_request) << (method||block)
-    end
-    
-    def self.after_request(method = nil, &block)
-      callbacks(:after_request) << (method||block)
-    end
-    
     attr_reader :url, :options, :format
     attr_accessor :params, :body, :buffer, :method, :headers, :callbacks
     
@@ -87,12 +79,7 @@ module Nestful
       callback(:after_request, self, result)
       result
     end
-    
-    def progress(method=nil, &block)
-      callbacks(:progress) << (method||block)
-    end
-    alias_method :progress=, :progress
-        
+            
     protected    
       def encoded
         format.encode(params.any? ? params : body)
@@ -100,13 +87,15 @@ module Nestful
 
       def decoded(result)
         if buffer
-          data = Tempfile.new("nfr.#{rand(1000)}")
-          debugger
-          size, total = 0, result.content_length
+          data  = Tempfile.new("nfr.#{rand(1000)}")
+          size  = 0
+          total = result.content_length
+          
           result.read_body {|chunk|
             callback(:progress, self, total, size += chunk.size)
             data.write(chunk)
           }
+          
           data.rewind
           data
         else
@@ -125,5 +114,9 @@ module Nestful
         procs = self.class.callbacks(type) + callbacks(type)
         procs.each {|c| c.call(*args) }
       end
+  end
+  
+  class Request
+    include Callbacks
   end
 end
