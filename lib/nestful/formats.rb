@@ -1,7 +1,7 @@
 module Nestful
   module Formats
     autoload :BlankFormat, 'nestful/formats/blank_format'
-    autoload :FileFormat,  'nestful/formats/file_format'
+    autoload :MultipartFormat,  'nestful/formats/multipart_format'
     autoload :FormFormat,  'nestful/formats/form_format'
     autoload :XmlFormat,   'nestful/formats/xml_format'
     autoload :JsonFormat,  'nestful/formats/json_format'

@@ -2,7 +2,7 @@ require "active_resource/secure_random"
 
 module Nestful
   module Formats
-    module FileFormat
+    module MultipartFormat
       extend self
       EOL = "\r\n"
 
