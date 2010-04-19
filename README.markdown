@@ -1,6 +1,7 @@
 Nestful is a simple Ruby HTTP/REST client with a sane API. 
 
 ## Features
+
   * Simple API
   * File buffering
   * Before/Progress/After Callbacks
