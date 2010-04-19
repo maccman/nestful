@@ -112,7 +112,7 @@ module Nestful
     
       def callback(type, *args)
         procs = self.class.callbacks(type) + callbacks(type)
-        procs.each {|c| c.call(*args) }
+        procs.compact.each {|c| c.call(*args) }
       end
   end
   
