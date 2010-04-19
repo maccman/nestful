@@ -87,8 +87,13 @@ module Nestful
       callback(:after_request, self, result)
       result
     end
+    
+    def progress(method=nil, &block)
+      callbacks(:progress) << (method||block)
+    end
+    alias_method :progress=, :progress
         
-    protected
+    protected    
       def encoded
         format.encode(params.any? ? params : body)
       end
@@ -96,9 +101,10 @@ module Nestful
       def decoded(result)
         if buffer
           data = Tempfile.new("nfr.#{rand(1000)}")
-          size, total = 0, result['Content-Length'].to_i
+          debugger
+          size, total = 0, result.content_length
           result.read_body {|chunk|
-            callback(:progress, total, size += chunk.size)
+            callback(:progress, self, total, size += chunk.size)
             data.write(chunk)
           }
           data.rewind
