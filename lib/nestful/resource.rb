@@ -19,12 +19,12 @@ module Nestful
       Request.post(url, options.merge(@options))
     end
     
-    def json_get(params = {})
-      get(:format => :json, :params => params)
+    def json_get(params = nil)
+      get(:format => :json, :params => nil)
     end
     
-    def json_post(params = {})
-      post(:format => :json, :params => params)
+    def json_post(params = nil)
+      post(:format => :json, :params => nil)
     end
   end
 end
