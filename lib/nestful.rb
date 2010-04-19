@@ -34,11 +34,11 @@ module Nestful
     Request.new(url, options.merge(:method => :delete)).execute
   end
   
-  def json_get(params = nil)
-    get(:format => :json, :params => params)
+  def json_get(url, params = nil)
+    get(url, :format => :json, :params => params)
   end
   
-  def json_post(params = nil)
-    post(:format => :json, :params => params)
+  def json_post(url, params = nil)
+    post(url, :format => :json, :params => params)
   end
 end
