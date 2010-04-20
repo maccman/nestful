@@ -59,12 +59,14 @@ module Nestful
           while data = value.read(8124)
             stream.write(data)
           end
+          stream.write(EOL)
         end
     
         def create_field(key, value)
           stream.write(%Q{Content-Disposition: form-data; name="#{key}"} + EOL)
           stream.write(EOL)
           stream.write(value)
+          stream.write(EOL)
         end
   
         def filename(body)
