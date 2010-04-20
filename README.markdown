@@ -1,5 +1,9 @@
 Nestful is a simple Ruby HTTP/REST client with a sane API. 
 
+## Installation
+
+    sudo gem install nestful
+
 ## Features
 
   * Simple API
