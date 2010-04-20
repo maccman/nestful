@@ -15,10 +15,10 @@ Nestful is a simple Ruby HTTP/REST client with a sane API.
 
 Request options:
 
-  * headers
-  * params
-  * buffer
-  * method
+  * headers (hash)
+  * params  (hash)
+  * buffer  (true/false)
+  * method  (:get/:post/:put/:delete/:head)
 
 Connection options:
 
