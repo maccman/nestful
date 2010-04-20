@@ -15,15 +15,16 @@ module Nestful
 
       def encode(params, options = nil)
         stream   = Tempfile.new("nf.#{rand(1000)}")
-        stream.write("--#{boundary}")
-        stream.write(EOL)
+        stream.write(boundary + EOL)
         params.each do |key, value|
+          stream.write(boundary + EOL)
           if value.is_a?(File) || value.is_a?(StringIO)
             create_file_field(stream, key, value)
           else
             create_field(stream, key, value)
           end
         end
+        stream.write(EOL + boundary + "--" + EOL)
         clear_boundary
         stream.rewind
         stream
@@ -35,7 +36,7 @@ module Nestful
   
       protected
         def boundary
-          @boundary ||= ActiveSupport::SecureRandom.hex(10)
+          @boundary ||= "--#{ActiveSupport::SecureRandom.hex(10)}"
         end
     
         def clear_boundary
@@ -43,19 +44,21 @@ module Nestful
         end
   
         def create_file_field(stream, key, value)
-          stream.write(%Q{Content-Disposition: form-data; name="#{key}"; filename="#{filename(value)}"})
-          stream.write(EOL)
+          stream.write(%Q{Content-Disposition: form-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
+          stream.write(%Q{Content-Type: application/octet-stream} + EOL)
+          stream.write(%Q{Content-Transfer-Encoding: binary} + EOL)
           stream.write(EOL)
           while data = value.read(8124)
             stream.write(data)
           end
+          stream.write(EOL)
         end
     
         def create_field(stream, key, value)
-          stream.write(%Q{Content-Disposition: form-data; name="#{key}"})
-          stream.write(EOL)
+          stream.write(%Q{Content-Disposition: form-data; name="#{key}"} + EOL)
           stream.write(EOL)
           stream.write(value)
+          stream.write(EOL)
         end
   
         def filename(body)
