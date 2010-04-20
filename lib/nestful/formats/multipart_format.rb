@@ -10,7 +10,7 @@ module Nestful
       end
 
       def mime_type
-        %Q{multipart/form-data; boundary="#{boundary}"}
+        %Q{multipart/form-data; boundary=#{boundary}}
       end
 
       def encode(params, options = nil)
