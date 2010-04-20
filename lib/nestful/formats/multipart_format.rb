@@ -20,7 +20,7 @@ module Nestful
 
       def encode(params, options = nil, namespace = nil)
         to_multipart(params)
-        stream.write(EOL + "--" + boundary + "--" + EOL)
+        stream.write("--" + boundary + "--" + EOL)
         stream.flush
         stream.rewind
         stream
