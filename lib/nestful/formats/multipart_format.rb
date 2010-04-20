@@ -4,6 +4,13 @@ module Nestful
   module Formats
     class MultipartFormat < Format
       EOL = "\r\n"
+      
+      attr_reader :boundary
+      
+      def initialize(*args)
+        super
+        @boundary = ActiveSupport::SecureRandom.hex(10)        
+      end
 
       def mime_type
         %Q{multipart/form-data; boundary=#{boundary}}
@@ -20,7 +27,6 @@ module Nestful
           end
         end
         stream.write(EOL + "--" + boundary + "--" + EOL)
-        clear_boundary
         stream.rewind
         stream
       end
@@ -29,15 +35,7 @@ module Nestful
         body
       end
   
-      protected
-        def boundary
-          @boundary ||= ActiveSupport::SecureRandom.hex(10)
-        end
-    
-        def clear_boundary
-          @boundary = nil
-        end
-  
+      protected  
         def create_file_field(stream, key, value)
           stream.write(%Q{Content-Disposition: form-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
           stream.write(%Q{Content-Type: application/octet-stream} + EOL)
