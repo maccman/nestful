@@ -33,24 +33,29 @@ Connection options:
   
 ### GET request
 
-    Nestful.get 'http://example.com'
+    Nestful.get 'http://example.com' #=> "body"
 
 ### POST request
 
-    Nestful.post 'http://example.com', :format => :form
+    Nestful.post 'http://example.com', :format => :form #=> "body"
+    
+### Parameters
+
+    Nestful.get 'http://example.com', :params => {:nestled => {:params => 1}}
 
 ### JSON request
 
-    Nestful.get 'http://example.com', :format => :json
-    Nestful.post 'http://example.com', :format => :json, :params => {:q => 'test'}
+    Nestful.get 'http://example.com', :format => :json  #=> {:json_hash => 1}
+    Nestful.json_get 'http://example.com'               #=> {:json_hash => 1}
+    Nestful.post 'http://example.com', :format => :json, :params => {:q => 'test'} #=> {:json_hash => 1}
   
 ### Resource
 
-    Nestful::Resource.new('http://example.com')['assets'].get(:format => :xml)
+    Nestful::Resource.new('http://example.com')['assets'][1].get(:format => :xml) #=> {:xml_hash => 1}
 
 ### Buffer download, return Tempfile
 
-    Nestful.get 'http://example.com/file.jpg', :buffer => true
+    Nestful.get 'http://example.com/file.jpg', :buffer => true #=> <File ...>
 
 ### Callbacks
 
