@@ -16,7 +16,7 @@ module Nestful
     end
 
     def post(options = {})
-      Request.post(url, options.merge(@options))
+      Nestful.post(url, options.merge(@options))
     end
     
     def json_get(params = nil)
