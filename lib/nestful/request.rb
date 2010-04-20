@@ -43,20 +43,17 @@ module Nestful
     end
     
     def uri
-      @uri ||= begin
-        http_url = url.match(/^http/) ? url : "http://#{url}"
-        uri      = URI.parse(http_url)
-        uri.path = "/" if uri.path.empty?
-        uri
-      end
+      http_url = url.match(/^http/) ? url : "http://#{url}"
+      uri      = URI.parse(http_url)
+      uri.path = "/" if uri.path.empty?
+      if format && format.extension
+        uri.path += ".#{format.extension}" 
+      end      
+      uri
     end
         
     def path
-      path = uri.path
-      if format && format.extension
-        path += ".#{format.extension}" 
-      end
-      path
+      uri.path
     end
     
     def query_path
