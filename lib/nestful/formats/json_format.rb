@@ -3,9 +3,7 @@ require 'active_support/json'
 
 module Nestful
   module Formats
-    module JsonFormat
-      extend self
-
+    class JsonFormat < Format
       def extension
         "json"
       end

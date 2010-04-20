@@ -25,7 +25,7 @@ module Nestful
 
     # The +site+ parameter is required and will set the +site+
     # attribute to the URI for the remote resource service.
-    def initialize(site, format = ActiveResource::Formats::XmlFormat)
+    def initialize(site, format = Formats::XmlFormat.new)
       raise ArgumentError, 'Missing site URI' unless site
       @user = @password = nil
       @uri_parser = URI.const_defined?(:Parser) ? URI::Parser.new : URI

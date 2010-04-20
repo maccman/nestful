@@ -1,11 +1,6 @@
 module Nestful
   module Formats
-    module FormFormat
-      extend self
-
-      def extension
-      end
-  
+    class FormFormat < Format
       def mime_type
         "application/x-www-form-urlencoded"
       end

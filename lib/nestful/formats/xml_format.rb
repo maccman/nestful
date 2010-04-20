@@ -2,9 +2,7 @@ require 'active_support/core_ext/hash/conversions'
 
 module Nestful
   module Formats
-    module XmlFormat
-      extend self
-
+    class XmlFormat < Format
       def extension
         "xml"
       end

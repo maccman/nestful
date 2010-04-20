@@ -2,12 +2,8 @@ require "active_support/secure_random"
 
 module Nestful
   module Formats
-    module MultipartFormat
-      extend self
+    class MultipartFormat < Format
       EOL = "\r\n"
-
-      def extension
-      end
 
       def mime_type
         %Q{multipart/form-data; boundary=#{boundary}}

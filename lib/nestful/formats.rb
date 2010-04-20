@@ -1,5 +1,19 @@
 module Nestful
   module Formats
+    class Format
+      def extension
+      end
+
+      def mime_type
+      end
+      
+      def encode(*args)
+      end
+      
+      def decode(*args)
+      end
+    end
+    
     autoload :BlankFormat, 'nestful/formats/blank_format'
     autoload :MultipartFormat,  'nestful/formats/multipart_format'
     autoload :FormFormat,  'nestful/formats/form_format'
