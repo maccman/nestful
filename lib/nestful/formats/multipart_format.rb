@@ -1,4 +1,4 @@
-require "active_resource/secure_random"
+require "active_support/secure_random"
 
 module Nestful
   module Formats
