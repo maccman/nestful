@@ -5,28 +5,23 @@ module Nestful
     class MultipartFormat < Format
       EOL = "\r\n"
       
-      attr_reader :boundary
+      attr_reader :boundary, :stream
       
       def initialize(*args)
         super
-        @boundary = ActiveSupport::SecureRandom.hex(10)        
+        @boundary = ActiveSupport::SecureRandom.hex(10)
+        @stream   = Tempfile.new("nf.#{rand(1000)}")
+        @stream.binmode
       end
 
       def mime_type
         %Q{multipart/form-data; boundary=#{boundary}}
       end
 
-      def encode(params, options = nil)
-        stream   = Tempfile.new("nf.#{rand(1000)}")
-        params.each do |key, value|
-          stream.write("--" + boundary + EOL)
-          if value.is_a?(File) || value.is_a?(StringIO)
-            create_file_field(stream, key, value)
-          else
-            create_field(stream, key, value)
-          end
-        end
+      def encode(params, options = nil, namespace = nil)
+        to_multipart(params)
         stream.write(EOL + "--" + boundary + "--" + EOL)
+        stream.flush
         stream.rewind
         stream
       end
@@ -35,23 +30,41 @@ module Nestful
         body
       end
   
-      protected  
-        def create_file_field(stream, key, value)
-          stream.write(%Q{Content-Disposition: form-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
+      protected
+        def to_multipart(params, namespace = nil)
+          params.each do |key, value|
+            key = namespace ? "#{namespace}[#{key}]" : key
+
+            # Support nestled params
+            if value.is_a?(Hash)
+              to_multipart(value, key)
+              next
+            end
+
+            stream.write("--" + boundary + EOL)
+
+            if value.is_a?(File) || value.is_a?(StringIO)
+              create_file_field(key, value)
+            else
+              create_field(key, value)
+            end
+          end          
+        end
+      
+        def create_file_field(key, value)
+          stream.write(%Q{Content-Disposition: format-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
           stream.write(%Q{Content-Type: application/octet-stream} + EOL)
           stream.write(%Q{Content-Transfer-Encoding: binary} + EOL)
           stream.write(EOL)
           while data = value.read(8124)
             stream.write(data)
           end
-          stream.write(EOL)
         end
     
-        def create_field(stream, key, value)
+        def create_field(key, value)
           stream.write(%Q{Content-Disposition: form-data; name="#{key}"} + EOL)
           stream.write(EOL)
           stream.write(value)
-          stream.write(EOL)
         end
   
         def filename(body)
