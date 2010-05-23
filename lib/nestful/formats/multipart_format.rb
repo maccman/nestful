@@ -52,7 +52,7 @@ module Nestful
         end
       
         def create_file_field(key, value)
-          stream.write(%Q{Content-Disposition: format-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
+          stream.write(%Q{Content-Disposition: form-data; name="#{key}"; filename="#{filename(value)}"} + EOL)
           stream.write(%Q{Content-Type: application/octet-stream} + EOL)
           stream.write(%Q{Content-Transfer-Encoding: binary} + EOL)
           stream.write(EOL)
