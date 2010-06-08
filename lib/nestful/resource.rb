@@ -8,8 +8,10 @@ module Nestful
     end
     
     def [](suburl)
-      base = url
-      base += "/" unless base =~ /\/$/
+      return self if suburl.nil?
+      suburl = suburl.to_s
+      base   = url
+      base  += "/" unless base =~ /\/$/
       self.class.new(URI.join(base, suburl).to_s)
     end
     
