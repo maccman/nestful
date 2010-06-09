@@ -24,6 +24,13 @@ module Nestful
       self.headers ||= {}
       self.params  ||= {}
       self.body    ||= ''
+      
+      uri_query = self.uri.query.split("&").inject({}) {|hash, res|
+        key, value = res.split("=")
+        hash[key]  = value
+        hash
+      }
+      self.params.merge!(uri_query)
     end
     
     def format=(mime_or_format)
