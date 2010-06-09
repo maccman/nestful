@@ -25,13 +25,9 @@ module Nestful
       self.params  ||= {}
       self.body    ||= ''
       
-      self.uri.query ||= ''
-      uri_query = self.uri.query.split("&").inject({}) {|hash, res|
-        key, value = res.split("=")
-        hash[key]  = value
-        hash
-      }
-      self.params.merge!(uri_query)
+      if self.uri.query
+        populate_query_params
+      end
     end
     
     def format=(mime_or_format)
@@ -107,6 +103,15 @@ module Nestful
           data = result.body
           format ? format.decode(data) : data
         end
+      end
+      
+      def populate_query_params
+        uri_query = self.uri.query.split("&").inject({}) {|hash, res|
+          key, value = res.split("=")
+          hash[key]  = value
+          hash
+        }
+        self.params.merge!(uri_query)
       end
       
       def callbacks(type = nil)
