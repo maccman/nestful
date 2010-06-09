@@ -25,6 +25,7 @@ module Nestful
       self.params  ||= {}
       self.body    ||= ''
       
+      self.uri.query ||= ''
       uri_query = self.uri.query.split("&").inject({}) {|hash, res|
         key, value = res.split("=")
         hash[key]  = value
