@@ -20,7 +20,7 @@ module Nestful
         send(method, val) if respond_to?(method)
       }
       self.method  ||= :get
-      self.format  ||= :blank
+      self.format  ||= :form
       self.headers ||= {}
       self.params  ||= {}
       self.body    ||= ''
