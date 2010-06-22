@@ -19,19 +19,19 @@ module Nestful
   extend self
 
   def get(url, options = {})
-    Request.new(url, options.merge(:method => :get)).execute
+    Request.new(url, ({:method => :get}).merge(options)).execute
   end
     
   def post(url, options = {})
-    Request.new(url, options.merge(:method => :post)).execute
+    Request.new(url, ({:method => :post, :format => :form}).merge(options)).execute
   end
   
   def put(url, options = {})
-    Request.new(url, options.merge(:method => :put)).execute
+    Request.new(url, ({:method => :put}).merge(options)).execute
   end
   
   def delete(url, options = {})
-    Request.new(url, options.merge(:method => :delete)).execute
+    Request.new(url, ({:method => :delete}).merge(options)).execute
   end
   
   def json_get(url, params = nil)
