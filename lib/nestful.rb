@@ -2,8 +2,7 @@ require "net/http"
 require "uri"
 require "tempfile"
 
-require "active_support/core_ext/object/to_param"
-require "active_support/core_ext/object/to_query"
+require "active_support/core_ext"
 require "active_support/inflector"
 
 $:.unshift(File.dirname(__FILE__))
