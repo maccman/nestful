@@ -18,7 +18,7 @@ module Nestful
         %Q{multipart/form-data; boundary=#{boundary}}
       end
 
-      def encode(params, options = nil, namespace = nil)
+      def encode(params, options = nil)
         to_multipart(params)
         stream.write("--" + boundary + "--" + EOL)
         stream.flush
