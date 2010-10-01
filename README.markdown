@@ -75,7 +75,7 @@ Connection options:
 
 Nestful uses ROAuth for OAuth support - check out supported options: http://github.com/maccman/roauth
     
-    require "nestful/oauth"
+    require 'nestful/oauth'
     Nestful.get 'http://example.com', :oauth => {}
 
 ## Credits

@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{nestful}
-  s.version = "0.0.3"
+  s.version = "0.0.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Alex MacCaw"]
-  s.date = %q{2010-06-08}
+  s.date = %q{2010-10-01}
   s.description = %q{Simple Ruby HTTP/REST client with a sane API}
   s.email = %q{info@eribium.org}
   s.extra_rdoc_files = [
@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
      "lib/nestful/formats/json_format.rb",
      "lib/nestful/formats/multipart_format.rb",
      "lib/nestful/formats/xml_format.rb",
+     "lib/nestful/oauth.rb",
      "lib/nestful/request.rb",
      "lib/nestful/request/callbacks.rb",
      "lib/nestful/resource.rb",
@@ -46,12 +47,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<activesupport>, [">= 2.3.8"])
+      s.add_runtime_dependency(%q<activesupport>, [">= 3.0.0.beta"])
     else
-      s.add_dependency(%q<activesupport>, [">= 2.3.8"])
+      s.add_dependency(%q<activesupport>, [">= 3.0.0.beta"])
     end
   else
-    s.add_dependency(%q<activesupport>, [">= 2.3.8"])
+    s.add_dependency(%q<activesupport>, [">= 3.0.0.beta"])
   end
 end
 
