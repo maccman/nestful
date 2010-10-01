@@ -70,6 +70,13 @@ Connection options:
 ### Multipart post
 
     Nestful.post 'http://example.com', :format => :multipart, :params => {:file => File.open('README')}
+    
+### OAuth
+
+Nestful uses ROAuth for OAuth support - check out supported options: http://github.com/maccman/roauth
+    
+    require "nestful/oauth"
+    Nestful.get 'http://example.com', :oauth => {}
 
 ## Credits
   Large parts of the connection code were taken from ActiveResource
