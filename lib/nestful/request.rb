@@ -13,7 +13,7 @@ module Nestful
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
   
     def initialize(url, options = {})
-      @url     = url
+      @url     = url.to_s
       @options = options
       @options.each {|key, val| 
         method = "#{key}="
@@ -50,12 +50,12 @@ module Nestful
       http_url = url.match(/^http/) ? url : "http://#{url}"
       uri      = URI.parse(http_url)
       uri.path = "/" if uri.path.empty?
-      if format && format.extension
+      if format && format.extension && !uri.path.match(/\..+/)
         uri.path += ".#{format.extension}" 
       end      
       uri
     end
-        
+
     def path
       uri.path
     end
@@ -83,7 +83,7 @@ module Nestful
             
     protected    
       def encoded
-        format.encode(params.any? ? params : body)
+        params.any? ? format.encode(params) : body
       end
 
       def decoded(result)
