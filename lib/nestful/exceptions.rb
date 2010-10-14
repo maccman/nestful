@@ -56,6 +56,9 @@ module Nestful
 
   # 410 Gone
   class ResourceGone < ClientError; end # :nodoc:
+  
+  # 422 Invalid
+  class ResourceInvalid < ClientError; end # :nodoc:
 
   # 5xx Server Error
   class ServerError < ConnectionError; end # :nodoc:
