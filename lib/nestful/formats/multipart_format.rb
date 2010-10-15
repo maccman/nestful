@@ -43,7 +43,7 @@ module Nestful
 
             stream.write("--" + boundary + EOL)
 
-            if value.is_a?(File) || value.is_a?(StringIO)
+            if value.is_a?(File) || value.is_a?(StringIO) || value.is_a?(Tempfile)
               create_file_field(key, value)
             else
               create_field(key, value)
