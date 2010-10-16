@@ -100,8 +100,9 @@ module Nestful
           data.rewind
           data
         else
+          return result if raw
           data = result.body
-          (format && !raw) ? format.decode(data) : data
+          format ? format.decode(data) : data
         end
       end
       
