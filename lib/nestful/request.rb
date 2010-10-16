@@ -6,8 +6,8 @@ module Nestful
       @callbacks[type] ||= []
     end
     
-    attr_reader :url, :options, :format
-    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks
+    attr_reader :url, :options, :format,
+    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw
     
     # Connection options
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
@@ -101,7 +101,7 @@ module Nestful
           data
         else
           data = result.body
-          format ? format.decode(data) : data
+          (format && !raw) ? format.decode(data) : data
         end
       end
       
