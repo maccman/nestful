@@ -6,7 +6,7 @@ module Nestful
       @callbacks[type] ||= []
     end
     
-    attr_reader :url, :options, :format,
+    attr_reader :url, :options, :format
     attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw
     
     # Connection options
