@@ -75,13 +75,13 @@ module Nestful
       if [:post, :put].include?(method)
         connection.send(method, path, encoded, headers) {|res| 
             result = decoded(res)
-            result.class_eval { attr_accessor :http_obj }
+            result.class_eval { attr_accessor :response }
             result.response = res
         }
       else
         connection.send(method, query_path, headers) {|res|
             result = decoded(res) 
-            result.class_eval { attr_accessor :http_obj }
+            result.class_eval { attr_accessor :response }
             result.response = res
         }
       end
