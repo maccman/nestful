@@ -73,9 +73,17 @@ module Nestful
       callback(:before_request, self)
       result = nil
       if [:post, :put].include?(method)
-        connection.send(method, path, encoded, headers) {|res| result = decoded(res) }
+        connection.send(method, path, encoded, headers) {|res| 
+            result = decoded(res)
+            result.class_eval { attr_accessor :http_obj }
+            result.response = res
+        }
       else
-        connection.send(method, query_path, headers) {|res| result = decoded(res) }
+        connection.send(method, query_path, headers) {|res|
+            result = decoded(res) 
+            result.class_eval { attr_accessor :http_obj }
+            result.response = res
+        }
       end
       callback(:after_request, self, result)
       result
