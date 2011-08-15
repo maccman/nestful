@@ -15,6 +15,7 @@ module Nestful
     end
     
     autoload :BlankFormat, 'nestful/formats/blank_format'
+    autoload :TextFormat, 'nestful/formats/text_format'
     autoload :MultipartFormat,  'nestful/formats/multipart_format'
     autoload :FormFormat,  'nestful/formats/form_format'
     autoload :XmlFormat,   'nestful/formats/xml_format'

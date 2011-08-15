@@ -42,7 +42,9 @@ Connection options:
 ### POST request
 
     Nestful.post 'http://example.com', :format => :form #=> "body"
-    
+
+other supported mime-type formats are :json, :multipart, :xml
+
 ### Parameters
 
     Nestful.get 'http://example.com', :params => {:nestled => {:params => 1}}
@@ -55,7 +57,11 @@ Connection options:
   
 ### Resource
 
+The Resource class provides a single object to work with restful services. The following example does a GET request to the URL; http://example.com/assets/1/
+
     Nestful::Resource.new('http://example.com')['assets'][1].get(:format => :xml) #=> {:xml_hash => 1}
+
+The Resource class also supports, post, json_post and json_get methods.
 
 ### Buffer download, return Tempfile
 
