@@ -12,7 +12,7 @@ module Nestful
       suburl = suburl.to_s
       base   = url
       base  += "/" unless base =~ /\/$/
-      self.class.new(URI.join(base, suburl).to_s)
+      self.class.new(URI.join(base, suburl).to_s, @options)
     end
     
     def get(options = {})
