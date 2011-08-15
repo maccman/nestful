@@ -7,7 +7,7 @@ module Nestful
     end
     
     attr_reader :url, :options, :format
-    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw
+    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw, :extension
     
     # Connection options
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
@@ -50,8 +50,9 @@ module Nestful
       http_url = url.match(/^http/) ? url : "http://#{url}"
       uri      = URI.parse(http_url)
       uri.path = "/" if uri.path.empty?
-      if format && format.extension && !uri.path.match(/\..+/)
-        uri.path += ".#{format.extension}" 
+      if extension
+        extension = format.extension if extension.is_a?(Boolean)
+        uri.path += ".#{extension}"
       end      
       uri
     end
