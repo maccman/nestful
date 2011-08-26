@@ -6,28 +6,21 @@ module Nestful
       @callbacks[type] ||= []
     end
     
-    attr_reader :url, :options, :format
+    attr_reader :options, :format, :uri
     attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw, :extension
     
     # Connection options
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
   
     def initialize(url, options = {})
-      @url     = url.to_s
+      self.url = url
       @options = options
-      @options.each {|key, val| 
+      @options.each do |key, val| 
         method = "#{key}="
         send(method, val) if respond_to?(method)
-      }
+      end
       self.method  ||= :get
       self.format  ||= :blank
-      self.headers ||= {}
-      self.params  ||= {}
-      self.body    ||= ''
-      
-      if self.uri.query
-        populate_query_params
-      end
     end
     
     def format=(mime_or_format)
@@ -46,17 +39,30 @@ module Nestful
       conn
     end
     
-    def uri
-      http_url = url.match(/^http/) ? url : "http://#{url}"
-      uri      = URI.parse(http_url)
-      uri.path = "/" if uri.path.empty?
+    def url=(url)
+      url  = url.to_s
+      url  = url.match(/^http/) ? url : "http://#{url}"
+      
+      @uri = URI.parse(url)
+      @uri.path = "/" if @uri.path.empty?
+      
       if extension
         extension = format.extension if extension.is_a?(Boolean)
-        uri.path += ".#{extension}"
-      end      
-      uri
+        @uri.path += ".#{extension}"
+      end
+      
+      @params  = {}
+      @headers = {}
+      @body    = ''
+      
+      @uri.query.split("&").each do |res|
+        key, value = res.split("=")
+        @params[key] = value
+      end if @uri.query
+      
+      url
     end
-
+    
     def path
       uri.path
     end
@@ -74,23 +80,26 @@ module Nestful
       callback(:before_request, self)
       result = nil
       if [:post, :put].include?(method)
-        connection.send(method, path, encoded, headers) {|res| 
-            result = decoded(res)
-            result.class_eval { attr_accessor :response }
-            result.response = res
-        }
+        connection.send(method, path, encoded, headers) do |res| 
+          result = decoded(res)
+          result.class_eval { attr_accessor :response }
+          result.response = res
+        end
       else
-        connection.send(method, query_path, headers) {|res|
-            result = decoded(res) 
-            result.class_eval { attr_accessor :response }
-            result.response = res
-        }
+        connection.send(method, query_path, headers) do |res|
+          result = decoded(res) 
+          result.class_eval { attr_accessor :response }
+          result.response = res
+        end
       end
       callback(:after_request, self, result)
       result
+    rescue Redirection => error
+      self.url = error.response['Location']
+      execute
     end
             
-    protected    
+    protected      
       def encoded
         params.any? ? format.encode(params) : body
       end
@@ -101,10 +110,10 @@ module Nestful
           size  = 0
           total = result.content_length
           
-          result.read_body {|chunk|
+          result.read_body do |chunk|
             callback(:progress, self, total, size += chunk.size)
             data.write(chunk)
-          }
+          end
           
           data.rewind
           data
@@ -113,15 +122,6 @@ module Nestful
           data = result.body
           format ? format.decode(data) : data
         end
-      end
-      
-      def populate_query_params
-        uri_query = self.uri.query.split("&").inject({}) {|hash, res|
-          key, value = res.split("=")
-          hash[key]  = value
-          hash
-        }
-        self.params.merge!(uri_query)
       end
       
       def callbacks(type = nil)

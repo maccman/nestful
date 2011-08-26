@@ -1,18 +1,18 @@
-require "net/http"
-require "uri"
-require "tempfile"
+require 'net/http'
+require 'uri'
+require 'tempfile'
 
-require "active_support/core_ext"
-require "active_support/inflector"
+require 'active_support/core_ext'
+require 'active_support/inflector'
 
 $:.unshift(File.dirname(__FILE__))
 
-require "nestful/exceptions"
-require "nestful/formats"
-require "nestful/connection"
-require "nestful/request/callbacks"
-require "nestful/request"
-require "nestful/resource"
+require 'nestful/exceptions'
+require 'nestful/formats'
+require 'nestful/connection'
+require 'nestful/request/callbacks'
+require 'nestful/request'
+require 'nestful/resource'
 
 module Nestful
   extend self

@@ -4,11 +4,11 @@ module Nestful
   module Formats
     class XmlFormat < Format
       def extension
-        "xml"
+        'xml'
       end
 
       def mime_type
-        "application/xml"
+        'application/xml'
       end
 
       def encode(hash, options={})

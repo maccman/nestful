@@ -2,7 +2,7 @@ module Nestful
   module Formats
     class TextFormat < Format
       def mime_type
-        "text/plain"
+        'text/plain'
       end
 
       def encode(body)

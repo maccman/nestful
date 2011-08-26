@@ -5,11 +5,11 @@ module Nestful
   module Formats
     class JsonFormat < Format
       def extension
-        "json"
+        'json'
       end
 
       def mime_type
-        "application/json"
+        'application/json'
       end
 
       def encode(hash, options = nil)

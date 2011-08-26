@@ -1,4 +1,4 @@
-require "active_support/secure_random"
+require 'active_support/secure_random'
 
 module Nestful
   module Formats
@@ -72,7 +72,7 @@ module Nestful
         def filename(body)
           return body.original_filename   if body.respond_to?(:original_filename)
           return File.basename(body.path) if body.respond_to?(:path)
-          "Unknown"
+          'Unknown'
         end
     end
   end

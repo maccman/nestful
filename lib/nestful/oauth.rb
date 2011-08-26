@@ -1,4 +1,4 @@
-require "roauth"
+require 'roauth'
 
 module Nestful
   class Request
@@ -16,7 +16,7 @@ module Nestful
       )
     
       self.headers ||= {}
-      self.headers["Authorization"] = signature
+      self.headers['Authorization'] = signature
     end
 
     before_request(&:oauth_sign)
