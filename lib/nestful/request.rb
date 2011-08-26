@@ -86,7 +86,13 @@ module Nestful
         }
       end
       callback(:after_request, self, result)
-      result
+      response = result.response
+      # If response is a redirect and :allow_redirect is true issue another request
+      if @options.key? :allow_redirect and response.header.key?('Location') and [301, 302].include?(response.code.to_i)
+          Request.new(result.response.header['Location'], options).execute
+      else
+          result
+      end
     end
             
     protected    
