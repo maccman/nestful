@@ -1,2 +1,9 @@
 pkg
 *.gem
+*.*~
+*~
+*.pyc
+*.swp
+*.swo
+build/
+

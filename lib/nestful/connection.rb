@@ -145,7 +145,7 @@ module Nestful
       def handle_response(response)
         case response.code.to_i
           when 301,302
-            raise(Redirection.new(response))
+            response
           when 200...400
             response
           when 400

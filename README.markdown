@@ -39,6 +39,10 @@ Connection options:
 
     Nestful.get 'http://example.com' #=> "body"
 
+with redirection
+
+    Nestful.get 'http://apple.com', :allow_redirect => true
+
 ### POST request
 
     Nestful.post 'http://example.com', :format => :form #=> "body"
