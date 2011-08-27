@@ -6,20 +6,25 @@ module Nestful
       @callbacks[type] ||= []
     end
     
-    attr_reader :options, :format, :uri
+    attr_reader :options, :format, :url
     attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw, :extension
     
     # Connection options
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
   
     def initialize(url, options = {})
-      self.url = url
+      @url     = url.to_s
+      
       @options = options
       @options.each do |key, val| 
         method = "#{key}="
         send(method, val) if respond_to?(method)
       end
+
       self.method  ||= :get
+      self.params  ||= {}
+      self.headers ||= {}
+      self.body    ||= ''
       self.format  ||= :blank
     end
     
@@ -39,9 +44,16 @@ module Nestful
       conn
     end
     
-    def url=(url)
-      url  = url.to_s
-      url  = url.match(/^http/) ? url : "http://#{url}"
+    def url=(value)
+      @url = value
+      @uri = nil
+      @url
+    end
+        
+    def uri
+      return @uri if @uri
+      
+      url = @url.match(/^http/) ? @url : "http://#{@url}"
       
       @uri = URI.parse(url)
       @uri.path = "/" if @uri.path.empty?
@@ -51,16 +63,12 @@ module Nestful
         @uri.path += ".#{extension}"
       end
       
-      @params  = {}
-      @headers = {}
-      @body    = ''
-      
       @uri.query.split("&").each do |res|
         key, value = res.split("=")
         @params[key] = value
       end if @uri.query
       
-      url
+      @uri
     end
     
     def path
@@ -69,7 +77,7 @@ module Nestful
     
     def query_path
       query_path = path
-      if params.present?
+      if params.any?
         query_path += "?"
         query_path += params.to_param
       end
@@ -99,7 +107,7 @@ module Nestful
       execute
     end
             
-    protected      
+    protected
       def encoded
         params.any? ? format.encode(params) : body
       end
