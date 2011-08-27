@@ -69,7 +69,7 @@ module Nestful
     
     def query_path
       query_path = path
-      if params.any?
+      if params.present?
         query_path += "?"
         query_path += params.to_param
       end
