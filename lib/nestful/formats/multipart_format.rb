@@ -1,4 +1,4 @@
-require 'active_support/secure_random'
+require 'securerandom'
 
 module Nestful
   module Formats
@@ -9,7 +9,7 @@ module Nestful
       
       def initialize(*args)
         super
-        @boundary = ActiveSupport::SecureRandom.hex(10)
+        @boundary = SecureRandom.hex(10)
         @stream   = Tempfile.new("nf.#{rand(1000)}")
         @stream.binmode
       end
