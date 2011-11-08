@@ -180,7 +180,7 @@ module Nestful
       end
 
       def new_http
-        if @proxy
+        if defined?(@proxy)
           Net::HTTP.new(@site.host, @site.port, @proxy.host, @proxy.port, @proxy.user, @proxy.password)
         else
           Net::HTTP.new(@site.host, @site.port)
@@ -191,7 +191,7 @@ module Nestful
         http = apply_ssl_options(http)
 
         # Net::HTTP timeouts default to 60 seconds.
-        if @timeout
+        if defined?(@timeout)
           http.open_timeout = @timeout
           http.read_timeout = @timeout
         end
