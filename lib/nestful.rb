@@ -42,6 +42,6 @@ module Nestful
   end
 
   def json_put(url, options = {})
-    put(url, {"Content-Type" => "application/json"}.merge(options)).execute
+    put(url, {:format => :json}.merge(options)).execute
   end
 end
