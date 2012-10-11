@@ -7,7 +7,7 @@ module Nestful
     end
     
     attr_reader :options, :format, :url
-    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw, :extension
+    attr_accessor :params, :body, :buffer, :method, :headers, :callbacks, :raw, :extension, :buffer_binmode
     
     # Connection options
     attr_accessor :proxy, :user, :password, :auth_type, :timeout, :ssl_options
@@ -115,6 +115,7 @@ module Nestful
       def decoded(result)
         if buffer
           data  = Tempfile.new("nfr.#{rand(1000)}")
+          data.binmode if buffer_binmode
           size  = 0
           total = result.content_length
           
