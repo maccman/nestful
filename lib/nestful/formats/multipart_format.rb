@@ -1,4 +1,5 @@
 require 'securerandom'
+require 'tempfile'
 
 module Nestful
   module Formats

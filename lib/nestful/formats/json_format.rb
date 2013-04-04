@@ -1,24 +1,25 @@
-require 'yaml'
-require 'active_support/json'
+begin
+  require 'json'
+rescue LoadError => e
+  require 'json/pure'
+end
 
 module Nestful
   module Formats
-    class JsonFormat < Format
-      def extension
-        'json'
-      end
-
+    class JSONFormat < Format
       def mime_type
         'application/json'
       end
 
       def encode(hash, options = nil)
-        ActiveSupport::JSON.encode(hash, options)
+        hash.to_json(options)
       end
 
       def decode(json)
-        ActiveSupport::JSON.decode(json)
+        JSON.parse(json)
       end
     end
+
+    JsonFormat = JSONFormat
   end
 end

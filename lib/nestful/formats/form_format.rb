@@ -4,11 +4,11 @@ module Nestful
       def mime_type
         'application/x-www-form-urlencoded'
       end
-  
+
       def encode(params, options = nil)
-        params.to_param
+        Helpers.to_param(params)
       end
-  
+
       def decode(body)
         body
       end
