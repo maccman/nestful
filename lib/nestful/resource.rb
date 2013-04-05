@@ -5,22 +5,29 @@ module Nestful
     def self.endpoint(value = nil)
       @endpoint = value if value
       return @endpoint if @endpoint
-      defined?(super) ? super : nil
+      superclass.respond_to?(:endpoint) ? superclass.endpoint : nil
     end
 
-    def self.url(value = nil)
-      @url = value if value
-      @url || raise('Must define url')
-    end
-
-    def uri(*parts)
-      parts = [endpoint, url] + parts
-      URI.join(*parts.map(&:to_s))
+    def self.path(value = nil)
+      @path = value if value
+      return @path if @path
+      superclass.respond_to?(:path) ? superclass.path : nil
     end
 
     def self.options(value = nil)
-      @options = value if value
-      @options
+      (@options ||= {}).merge!(value) if value
+      return @options if @options
+      superclass.respond_to?(:options) ? superclass.options : nil
+    end
+
+    def self.url
+      URI.join(endpoint.to_s, path.to_s).to_s
+    end
+
+    def self.uri(*parts)
+      parts.unshift(path)
+      parts.unshift(endpoint)
+      URI.join(*parts.compact.map(&:to_s))
     end
 
     def self.get(action = '', params = {}, options = {})
@@ -43,9 +50,17 @@ module Nestful
       Request.new(url, self.options.merge(options)).execute
     end
 
-    def self.new(attributes = {}, options = {})
+    def self.all
+      self.new(get)
+    end
+
+    def self.find(id)
+      self.new(get(id))
+    end
+
+    def self.new(attributes = {})
       if attributes.is_a?(Array)
-        attributes.map {|set| super(set, options) }
+        attributes.map {|set| super(set) }
       else
         super
       end
@@ -105,7 +120,7 @@ module Nestful
     end
 
     def load(attributes = {})
-      attributes.each do |key, value|
+      attributes.to_hash.each do |key, value|
         send("#{key}=", value)
       end
     end

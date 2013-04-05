@@ -11,6 +11,7 @@ module Nestful
       message = "Failed."
       message << "  Response code = #{response.code}." if response.respond_to?(:code)
       message << "  Response message = #{response.message}." if response.respond_to?(:message)
+      message << "  Response Body = #{response.body}." if response.respond_to?(:body)
       message
     end
   end

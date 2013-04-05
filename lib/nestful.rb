@@ -16,15 +16,15 @@ module Nestful
     Endpoint[url].get(*args)
   end
 
-  def post(url, options = {})
+  def post(url, *args)
     Endpoint[url].post(*args)
   end
 
-  def put(url, options = {})
+  def put(url, *args)
     Endpoint[url].put(*args)
   end
 
-  def delete(url, options = {})
+  def delete(url, *args)
     Endpoint[url].delete(*args)
   end
 end

@@ -53,16 +53,10 @@ module Nestful
     end
 
     def execute
-      result = nil
-
       if encoded?
-        connection.send(method, path, encoded, build_headers) do |res|
-          result = res
-        end
+        result = connection.send(method, path, encoded, build_headers)
       else
-        connection.send(method, query_path, build_headers) do |res|
-          result = res
-        end
+        result = connection.send(method, query_path, build_headers)
       end
 
       Response.new(result)

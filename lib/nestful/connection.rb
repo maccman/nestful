@@ -5,12 +5,12 @@ module Nestful
   class Connection
     UriParser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
 
-    attr_reader :site, :auth_type, :timeout, :proxy, :ssl_options
+    attr_reader :endpoint, :auth_type, :timeout, :proxy, :ssl_options
 
-    # The +site+ parameter is required and will set the +site+
+    # The +endpoint+ parameter is required and will set the +endpoint+
     # attribute to the URI for the remote resource service.
-    def initialize(site, options = {})
-      self.site = site
+    def initialize(endpoint, options = {})
+      self.endpoint = endpoint
 
       options.each do |key, value|
         self.send("#{key}=", value) unless value.nil?
@@ -18,8 +18,8 @@ module Nestful
     end
 
     # Set URI for remote service.
-    def site=(site)
-      @site = site.is_a?(URI) ? site : UriParser.parse(site)
+    def endpoint=(endpoint)
+      @endpoint = endpoint.is_a?(URI) ? endpoint : UriParser.parse(endpoint)
     end
 
     # Set the proxy for remote service.
@@ -51,37 +51,8 @@ module Nestful
 
     # Makes a request to the remote service.
     def request(method, path, *arguments)
-      body    = nil
-      body    = arguments.shift if [:put, :post].include?(method)
-      headers = arguments.shift || {}
-
-      method = Net::HTTP.const_get(method.to_s.capitalize)
-      method = method.new(path)
-
-      if body
-        if body.respond_to?(:read)
-          method.body_stream = body
-        else
-          method.body = body
-        end
-
-        if body.respond_to?(:size)
-          headers['Content-Length'] ||= body.size
-        end
-      end
-
-      headers.each do |name, value|
-        next unless value
-        method.add_field(name, value)
-      end
-
-      http.start do |stream|
-        stream.request(method) do |rsp|
-          handle_response(rsp)
-          yield(rsp) if block_given?
-          rsp
-        end
-      end
+      response = http.send(method, path, *arguments)
+      handle_response(response)
 
     rescue Timeout::Error => e
       raise TimeoutError.new(e.message)
@@ -131,11 +102,11 @@ module Nestful
 
     def new_http
       if proxy
-        Net::HTTP.new(site.host, site.port,
+        Net::HTTP.new(endpoint.host, endpoint.port,
                       proxy.host, proxy.port,
                       proxy.user, proxy.password)
       else
-        Net::HTTP.new(site.host, site.port)
+        Net::HTTP.new(endpoint.host, endpoint.port)
       end
     end
 
@@ -152,7 +123,7 @@ module Nestful
     end
 
     def apply_ssl_options(http)
-      return http unless site.is_a?(URI::HTTPS)
+      return http unless endpoint.is_a?(URI::HTTPS)
 
       http.use_ssl     = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE

@@ -2,26 +2,12 @@ require 'cgi'
 
 module Nestful
   module Helpers extend self
-    def to_query(key, value)
-      case key
-      when Hash
-        "#{CGI.escape(to_param(key))}=#{CGI.escape(to_param(value))}"
-
-      when Array
-        prefix = "#{key}[]"
-        value.collect { |v| to_query(prefix, v) }.join('&')
-
-      else
-        value
-      end
-    end
-
     def to_param(object, namespace = nil)
       case object
       when Hash
         object.map do |key, value|
           key = "#{namespace}[#{key}]" if namespace
-          to_query(key, value)
+          "#{CGI.escape(to_param(key))}=#{CGI.escape(to_param(value, key))}"
         end.join('&')
 
       when Array
@@ -30,7 +16,7 @@ module Nestful
         end.join('/')
 
       else
-        value
+        object.to_s
       end
     end
 
