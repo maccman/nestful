@@ -35,13 +35,13 @@ module Nestful
     def uri
       return @uri if @uri
 
-      url = @url.match(/^http/) ? @url : "http://#{@url}"
+      url = @url.match(/\Ahttps?:\/\//) ? @url : "http://#{@url}"
 
       @uri = URI.parse(url)
-      @uri.path = "/" if @uri.path.empty?
+      @uri.path = '/' if @uri.path.empty?
 
-      @uri.query.split("&").each do |res|
-        key, value = res.split("=")
+      @uri.query.split('&').each do |res|
+        key, value = res.split('=')
         @params[key] = value
       end if @uri.query
 

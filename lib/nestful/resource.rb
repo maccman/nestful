@@ -10,7 +10,12 @@ module Nestful
 
     def self.url(value = nil)
       @url = value if value
-      @url ? URI.join(endpoint || '', @url) : raise('Must define url')
+      @url || raise('Must define url')
+    end
+
+    def uri(*parts)
+      parts = [endpoint, url] + parts
+      URI.join(*parts.map(&:to_s))
     end
 
     def self.options(value = nil)
@@ -18,32 +23,24 @@ module Nestful
       @options
     end
 
-    def self.get(url, params = {}, options = {})
-      request(url, options.merge(:method => :get, :params => params))
+    def self.get(action = '', params = {}, options = {})
+      request(uri(action), options.merge(:method => :get, :params => params))
     end
 
-    def self.put(url, params = {}, options = {})
-      request(url, options.merge(:method => :put, :params => params))
+    def self.put(action = '', params = {}, options = {})
+      request(uri(action), options.merge(:method => :put, :params => params))
     end
 
-    def self.post(url, params = {}, options = {})
-      request(url, options.merge(:method => :post, :params => params))
+    def self.post(action = '', params = {}, options = {})
+      request(uri(action), options.merge(:method => :post, :params => params))
     end
 
-    def self.delete(url, params = {}, options = {})
-      request(url, options.merge(:method => :delete, :params => params))
+    def self.delete(action = '', params = {}, options = {})
+      request(uri(action), options.merge(:method => :delete, :params => params))
     end
 
     def self.request(url, options = {})
       Request.new(url, self.options.merge(options)).execute
-    end
-
-    def self.all
-      self.new(get(url))
-    end
-
-    def self.find(id)
-      self.new(get(URI.join(url, id.to_s)))
     end
 
     def self.new(attributes = {}, options = {})
@@ -62,27 +59,23 @@ module Nestful
     end
 
     def get(action = '', *args)
-      self.class.get(url(action), *args)
+      self.class.get(uri(action), *args)
     end
 
     def put(action = '', *args)
-      self.class.put(url(action), *args)
+      self.class.put(uri(action), *args)
     end
 
     def post(action = '', *args)
-      self.class.post(url(action), *args)
+      self.class.post(uri(action), *args)
     end
 
     def delete(action = '', *args)
-      self.class.delete(url, *args)
+      self.class.delete(uri(action), *args)
     end
 
-    def url(*parts)
-      URI.join(
-        self.class.url,
-        self.id.to_s,
-        *parts.map(&:to_s)
-      )
+    def uri(*parts)
+      self.class.uri(self.id, *parts)
     end
 
     def id #:nodoc:
