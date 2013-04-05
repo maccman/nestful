@@ -22,11 +22,10 @@ Nestful is a simple Ruby HTTP/REST client with a sane API.
 
     Nestful.post 'http://example.com', :foo => 'bar'
     Nestful.post 'http://example.com', {:foo => 'bar'}, :format => :json
-    Nestful.post 'http://example.com', {:file => File.open('README')}, :format => :multipart
 
 ### Parameters
 
-    Nestful.get 'http://example.com', :nestled => {:params => 1}
+    Nestful.get 'http://example.com', :nestled => {:vars => 1}
 
 ## Request
 
