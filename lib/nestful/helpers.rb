@@ -2,26 +2,24 @@ require 'cgi'
 
 module Nestful
   module Helpers extend self
-    def to_param(object, namespace = nil)
-      case object
-      when Hash
-        object.map do |key, value|
-          key = "#{namespace}[#{key}]" if namespace
-          "#{CGI.escape(to_param(key))}=#{CGI.escape(to_param(value, key))}"
-        end.join('&')
-
-      when Array
-        object.each do |value|
-          to_param(value)
-        end.join('/')
-
+    def to_param(value, key = nil)
+      case value
+      when Hash  then value.map { |k,v| to_param(v, append_key(key,k)) }.join('&')
+      when Array then value.map { |v| to_param(v, "#{key}[]") }.join('&')
+      when nil   then ''
       else
-        object.to_s
+        "#{key}=#{CGI.escape(value.to_s)}"
       end
     end
 
     def camelize(value)
       value.to_s.split('_').map {|w| w.capitalize }.join
+    end
+
+    protected
+
+    def append_key(root_key, key)
+      root_key.nil? ? key : "#{root_key}[#{key.to_s}]"
     end
   end
 end

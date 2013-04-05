@@ -15,7 +15,7 @@ module Nestful
     end
 
     def self.options(value = nil)
-      (@options ||= {}).merge!(value) if value
+      @options = value if value
       return @options if @options
       superclass.respond_to?(:options) ? superclass.options : nil
     end
@@ -50,8 +50,8 @@ module Nestful
       Request.new(url, self.options.merge(options)).execute
     end
 
-    def self.all
-      self.new(get)
+    def self.all(*args)
+      self.new(get('', *args))
     end
 
     def self.find(id)
