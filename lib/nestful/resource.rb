@@ -4,17 +4,18 @@ module Nestful
   class Resource
     def self.endpoint(value = nil)
       @endpoint = value if value
-      @endpoint || ''
+      return @endpoint if @endpoint
+      defined?(super) ? super : nil
     end
 
     def self.url(value = nil)
       @url = value if value
-      @url ? URI.join(endpoint, @url) : raise('Must define url')
+      @url ? URI.join(endpoint || '', @url) : raise('Must define url')
     end
 
     def self.options(value = nil)
       @options = value if value
-      @options || {}
+      @options
     end
 
     def self.get(url, params = {}, options = {})
@@ -53,33 +54,35 @@ module Nestful
       end
     end
 
-    attr_reader :attributes, :options
+    attr_reader :attributes
 
-    def initialize(attributes = {}, options = {})
-      @attributes = indifferent_attributes(attributes.to_hash)
-      @options    = self.class.options.merge(options)
+    def initialize(attributes = {})
+      @attributes = {}
+      load(attributes)
     end
 
-    def get(*args)
-      self.class.get(url, *args)
+    def get(action = '', *args)
+      self.class.get(url(action), *args)
     end
 
-    def put(*args)
-      self.class.put(url, *args)
+    def put(action = '', *args)
+      self.class.put(url(action), *args)
     end
 
-    def post(*args)
-      self.class.post(url, *args)
+    def post(action = '', *args)
+      self.class.post(url(action), *args)
     end
 
-    def delete(*args)
+    def delete(action = '', *args)
       self.class.delete(url, *args)
     end
 
-    alias_method :destroy, :delete
-
-    def url
-      URI.join(self.class.url, self.id.to_s)
+    def url(*parts)
+      URI.join(
+        self.class.url,
+        self.id.to_s,
+        *parts.map(&:to_s)
+      )
     end
 
     def id #:nodoc:
@@ -99,13 +102,19 @@ module Nestful
     end
 
     def to_hash
-      @attributes.dup
+      attributes.dup
     end
 
     alias_method :as_json, :to_hash
 
     def to_json(*)
       as_json.to_json
+    end
+
+    def load(attributes = {})
+      attributes.each do |key, value|
+        send("#{key}=", value)
+      end
     end
 
     alias_method :respond_to_without_attributes?, :respond_to?
@@ -122,19 +131,6 @@ module Nestful
     end
 
     protected
-
-    def indifferent_attributes(attributes)
-      attributes = indifferent_hash.merge(attributes)
-      attributes.each do |key, value|
-        next unless value.is_a?(Hash)
-        attributes[key] = indifferent_attributes(value)
-      end
-    end
-
-    # Creates a Hash with indifferent access.
-    def indifferent_hash
-      Hash.new {|hash,key| hash[key.to_s] if Symbol === key }
-    end
 
     def method_missing(method_symbol, *arguments) #:nodoc:
       method_name = method_symbol.to_s
