@@ -32,7 +32,7 @@ module Nestful
     end
 
     def delete(path, headers = {}, &block)
-      request(:delete, path, header, &block)
+      request(:delete, path, headers, &block)
     end
 
     def head(path, headers = {}, &block)
