@@ -23,7 +23,7 @@ module Nestful
 
     def format=(mime_or_format)
       @format = mime_or_format.is_a?(Symbol) ?
-        Formats[mime_or_format] : mime_or_format
+        Formats[mime_or_format].new : mime_or_format
     end
 
     def url=(value)

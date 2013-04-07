@@ -2,6 +2,10 @@ require 'cgi'
 
 module Nestful
   module Helpers extend self
+    def to_path(*params)
+      params.map(&:to_s).reject(&:empty?) * '/'
+    end
+
     def to_param(value, key = nil)
       case value
       when Hash  then value.map { |k,v| to_param(v, append_key(key,k)) }.join('&')

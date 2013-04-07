@@ -25,3 +25,7 @@ class Charge < Base
     post(:refund)
   end
 end
+
+class Token < Base
+  path '/v1/tokens'
+end

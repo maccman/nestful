@@ -17,7 +17,7 @@ module Nestful
     def self.options(value = nil)
       @options = value if value
       return @options if @options
-      superclass.respond_to?(:options) ? superclass.options : nil
+      superclass.respond_to?(:options) ? superclass.options : {}
     end
 
     def self.url
@@ -25,9 +25,7 @@ module Nestful
     end
 
     def self.uri(*parts)
-      parts.unshift(path)
-      parts.unshift(endpoint)
-      URI.join(*parts.compact.map(&:to_s))
+      URI.parse(Helpers.to_path(url, *parts))
     end
 
     def self.get(action = '', params = {}, options = {})
@@ -74,23 +72,23 @@ module Nestful
     end
 
     def get(action = '', *args)
-      self.class.get(uri(action), *args)
+      self.class.get(path(action), *args)
     end
 
     def put(action = '', *args)
-      self.class.put(uri(action), *args)
+      self.class.put(path(action), *args)
     end
 
     def post(action = '', *args)
-      self.class.post(uri(action), *args)
+      self.class.post(path(action), *args)
     end
 
     def delete(action = '', *args)
-      self.class.delete(uri(action), *args)
+      self.class.delete(path(action), *args)
     end
 
-    def uri(*parts)
-      self.class.uri(self.id, *parts)
+    def path(*parts)
+      Helpers.to_path(self.id, *parts)
     end
 
     def id #:nodoc:
