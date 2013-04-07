@@ -22,6 +22,8 @@ module Nestful
       response.code.to_i
     end
 
+    alias_method :status, :code
+
     def decoded
       @decoded ||= parser ? parser.decode(body) : body
     end
