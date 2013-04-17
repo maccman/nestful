@@ -40,10 +40,10 @@ module Nestful
       @uri = URI.parse(url)
       @uri.path = '/' if @uri.path.empty?
 
-      @uri.query.split('&').each do |res|
-        key, value = res.split('=')
-        @params[key] = value
-      end if @uri.query
+      if @uri.query
+        @params.merge!(Helpers.from_param(@uri.query))
+        @uri.query = nil
+      end
 
       @uri
     end
