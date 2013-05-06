@@ -24,11 +24,9 @@ module Nestful
         value.map { |k, v|
           to_param(v, prefix ? "#{prefix}[#{escape(k)}]" : escape(k))
         }.join("&")
-      when String
+      else
         raise ArgumentError, "value must be a Hash" if prefix.nil?
         "#{prefix}=#{escape(value)}"
-      else
-        prefix
       end
     end
 

@@ -5,8 +5,8 @@ module Nestful
   class Connection
     UriParser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
 
-    attr_accessor :auth_type, :timeout, :ssl_options
-    attr_reader :endpoint, :auth_type, :timeout, :proxy, :ssl_options
+    attr_accessor :timeout, :ssl_options
+    attr_reader :endpoint, :timeout, :proxy, :ssl_options
 
     # The +endpoint+ parameter is required and will set the +endpoint+
     # attribute to the URI for the remote resource service.
