@@ -5,6 +5,7 @@ module Nestful
   class Connection
     UriParser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
 
+    attr_accessor :auth_type, :timeout, :ssl_options
     attr_reader :endpoint, :auth_type, :timeout, :proxy, :ssl_options
 
     # The +endpoint+ parameter is required and will set the +endpoint+
