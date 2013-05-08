@@ -125,11 +125,11 @@ module Nestful
 
     alias_method :respond_to_without_attributes?, :respond_to?
 
-    def respond_to?(method)
+    def respond_to?(method, include_priv = false)
       method_name = method.to_s
       if attributes.nil?
         super
-      elsif method_name =~ /(?:=|\?)$/ && attributes.include?($`)
+      elsif attributes.include?(method_name.sub(/[=\?]\Z/, ''))
         true
       else
         super
