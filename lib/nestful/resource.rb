@@ -20,6 +20,12 @@ module Nestful
       superclass.respond_to?(:options) ? superclass.options : {}
     end
 
+    class << self
+      alias_method :endpoint=, :endpoint
+      alias_method :path=, :path
+      alias_method :options=, :options
+    end
+
     def self.url
       URI.join(endpoint.to_s, path.to_s).to_s
     end
