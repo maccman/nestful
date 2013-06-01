@@ -10,6 +10,12 @@ class TestResource < MiniTest::Unit::TestCase
     path '/v1/charges'
   end
 
+  class Token < Nestful::Resource
+    endpoint 'http://example.com'
+    path '/v1/tokens'
+    defaults :params => {:one => 1}
+  end
+
   def setup
   end
 
@@ -41,5 +47,12 @@ class TestResource < MiniTest::Unit::TestCase
     charge = Charge.new({:id => 1})
     charge.put(:capture)
     assert_requested(:put, 'http://example.com/v1/charges/1/capture')
+  end
+
+  def test_defaults
+    stub_request(:any, 'http://example.com/v1/tokens/1/capture?one=1')
+    charge = Token.new({:id => 1})
+    charge.get(:capture)
+    assert_requested(:get, 'http://example.com/v1/tokens/1/capture?one=1')
   end
 end

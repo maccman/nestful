@@ -14,16 +14,18 @@ module Nestful
       superclass.respond_to?(:path) ? superclass.path : nil
     end
 
-    def self.options(value = nil)
-      @options = value if value
-      return @options if @options
-      superclass.respond_to?(:options) ? superclass.options : {}
+    def self.defaults(value = nil)
+      @defaults = value if value
+      return @defaults if @defaults
+      superclass.respond_to?(:defaults) ? superclass.defaults : {}
     end
 
     class << self
       alias_method :endpoint=, :endpoint
       alias_method :path=, :path
-      alias_method :options=, :options
+      alias_method :defaults=, :defaults
+      alias_method :options, :defaults
+      alias_method :options=, :defaults
     end
 
     def self.url
@@ -51,7 +53,7 @@ module Nestful
     end
 
     def self.request(url, options = {})
-      Request.new(url, self.options.merge(options)).execute
+      Request.new(url, Helpers.deep_merge(self.options, options)).execute
     end
 
     def self.all(*args)
