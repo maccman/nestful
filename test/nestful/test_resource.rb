@@ -55,4 +55,14 @@ class TestResource < MiniTest::Unit::TestCase
     charge.get(:capture)
     assert_requested(:get, 'http://example.com/v1/tokens/1/capture?one=1')
   end
+
+  def test_absolute_uri
+    uri = Token.uri(URI.parse('http://example.com/v1/token'))
+    assert_equal uri.to_s, 'http://example.com/v1/token'
+  end
+
+  def test_to_json
+    charge = Charge.new(:amount => 1)
+    assert_equal charge.to_json, '{"amount":1}'
+  end
 end

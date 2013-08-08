@@ -33,6 +33,11 @@ module Nestful
     end
 
     def self.uri(*parts)
+      # If an absolute URI already
+      if (uri = parts.first) && uri.is_a?(URI)
+        return uri if uri.host
+      end
+
       URI.parse(Helpers.to_path(url, *parts))
     end
 
@@ -119,7 +124,9 @@ module Nestful
       attributes.dup
     end
 
-    alias_method :as_json, :to_hash
+    def as_json(*)
+      to_hash
+    end
 
     def to_json(*)
       as_json.to_json
