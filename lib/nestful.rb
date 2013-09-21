@@ -27,4 +27,8 @@ module Nestful
   def delete(url, *args)
     Endpoint[url].delete(*args)
   end
+
+  def request(url, *args)
+    Endpoint[url].request(*args)
+  end
 end
