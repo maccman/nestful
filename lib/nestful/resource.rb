@@ -138,6 +138,20 @@ module Nestful
       end
     end
 
+    def ==(other)
+      other.equal?(self) ||
+        (other.instance_of?(self.class) && other.attributes == attributes)
+    end
+
+    # Tests for equality (delegates to ==).
+    def eql?(other)
+      self == other
+    end
+
+    def hash
+      attributes.hash
+    end
+
     alias_method :respond_to_without_attributes?, :respond_to?
 
     def respond_to?(method, include_priv = false)
