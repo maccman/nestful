@@ -6,6 +6,7 @@ module Nestful
   autoload :Formats,    'nestful/formats'
   autoload :Connection, 'nestful/connection'
   autoload :Helpers,    'nestful/helpers'
+  autoload :Mash,       'nestful/mash'
   autoload :Request,    'nestful/request'
   autoload :Response,   'nestful/response'
   autoload :Resource,   'nestful/resource'
