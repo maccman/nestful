@@ -31,9 +31,22 @@ module Nestful
       end
     end
 
-    alias_method :to_s, :inspect
+    def self.from_json(json)
+      decoded = JSON.parse(
+        json, symbolize_names: true
+      )
 
-    attr_reader :response
+      case decoded
+      when Hash
+        self.new(decoded)
+      when Array
+        decoded.map {|v| self.new(v) }
+      else
+        decoded
+      end
+    end
+
+    alias_method :to_s, :inspect
 
     def initialize(source_hash = nil, default = nil, &blk)
       deep_update(source_hash) if source_hash
