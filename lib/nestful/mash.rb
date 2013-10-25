@@ -205,8 +205,6 @@ module Nestful
         when self.class
           val.dup
         when Hash
-          duping ? val.dup : val
-        when ::Hash
           val = val.dup if duping
           self.class.new(val)
         when Array
