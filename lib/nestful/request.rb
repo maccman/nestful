@@ -62,7 +62,16 @@ module Nestful
       Response.new(result)
 
     rescue Redirection => error
-      self.url = error.response['Location']
+      raise error unless error.response['Location']
+
+      location = URI.parse(error.response['Location'])
+
+      # Path is relative
+      unless location.host
+        location = URI.join(uri, location)
+      end
+
+      self.url = location.to_s
       execute
     end
 
