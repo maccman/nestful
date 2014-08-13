@@ -38,6 +38,22 @@ module Nestful
       end
     end
 
+    def to_url_param(value, prefix = nil)
+      case value
+      when Array
+        value.map { |v|
+          to_url_param(v, "#{prefix}[]")
+        }.join("&")
+      when Hash
+        value.map { |k, v|
+          to_url_param(v, prefix ? "#{prefix}[#{uri_escape(k)}]" : uri_escape(k))
+        }.join("&")
+      else
+        raise ArgumentError, "value must be a Hash" if prefix.nil?
+        "#{prefix}=#{uri_escape(value)}"
+      end
+    end
+
     def from_param(param)
       Rack::Utils.parse_nested_query(param)
       (value || '').split('&').each do |res|
@@ -59,7 +75,11 @@ module Nestful
     end
 
     def escape(s)
-      URI.encode_www_form_component(s)
+      URI.encode_www_form_component(s.to_s)
+    end
+
+    def uri_escape(s)
+      URI.escape(s.to_s)
     end
 
     if defined?(::Encoding)

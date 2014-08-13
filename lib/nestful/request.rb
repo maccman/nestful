@@ -113,7 +113,7 @@ module Nestful
       query_path = path
 
       if params.any?
-        query_path += '?' + Helpers.to_param(params)
+        query_path += '?' + Helpers.to_url_param(params)
       end
 
       query_path
