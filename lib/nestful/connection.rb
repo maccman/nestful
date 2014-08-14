@@ -59,6 +59,9 @@ module Nestful
       raise TimeoutError.new(e.message)
     rescue OpenSSL::SSL::SSLError => e
       raise SSLError.new(e.message)
+    rescue SocketError, Errno::ECONNREFUSED,
+           Errno::ETIMEDOUT, Errno::ENETUNREACH => e
+      raise ErrnoError.new(e.message)
     end
 
     # Handles response and error codes from the remote service.
