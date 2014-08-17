@@ -53,6 +53,8 @@ module Nestful
     # Makes a request to the remote service.
     def request(method, path, *arguments)
       response = http.send(method, path, *arguments)
+      response.uri = URI.join(endpoint, path)
+
       handle_response(response)
 
     rescue Timeout::Error => e

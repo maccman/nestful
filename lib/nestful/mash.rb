@@ -1,55 +1,38 @@
 module Nestful
   class Mash < Hash
-    def self.get(*args)
-      from_response(Nestful.get(*args))
+    def self.get(action = '', params = {}, options = {})
+      request(action, options.merge(:method => :get, :params => params))
     end
 
-    def self.post(*args)
-      from_response(Nestful.post(*args))
+    def self.put(action = '', params = {}, options = {})
+      request(action, options.merge(:method => :put, :params => params))
     end
 
-    def self.put(*args)
-      from_response(Nestful.put(*args))
+    def self.post(action = '', params = {}, options = {})
+      request(action, options.merge(:method => :post, :params => params))
     end
 
-    def self.delete(*args)
-      from_response(Nestful.delete(*args))
+    def self.delete(action = '', params = {}, options = {})
+      request(action, options.merge(:method => :delete, :params => params))
     end
 
-    def self.request(*args)
-      from_response(Nestful.request(*args))
+    def self.request(url, options = {})
+      self.new Request.new(url, options).execute
     end
 
-    def self.from_response(response)
-      case response.decoded
-      when Hash
-        self.new(response.decoded)
-      when Array
-        response.decoded.map {|v| self.new(v) }
+    def self.new(value = nil, *args)
+      if value.respond_to?(:each) &&
+        !value.respond_to?(:each_pair)
+        value.map {|v| super(v) }
       else
-        response
-      end
-    end
-
-    def self.from_json(json)
-      decoded = JSON.parse(
-        json, symbolize_names: true
-      )
-
-      case decoded
-      when Hash
-        self.new(decoded)
-      when Array
-        decoded.map {|v| self.new(v) }
-      else
-        decoded
+        super
       end
     end
 
     alias_method :to_s, :inspect
 
     def initialize(source_hash = nil, default = nil, &blk)
-      deep_update(source_hash) if source_hash
+      deep_update(source_hash.to_hash) if source_hash
       default ? super(default) : super(&blk)
     end
 
@@ -204,11 +187,11 @@ module Nestful
       case val
         when self.class
           val.dup
-        when Hash
+        when ::Hash
           val = val.dup if duping
-          self.class.new(val)
-        when Array
-          val.collect{ |e| convert_value(e) }
+          Mash.new(val)
+        when ::Array
+          val.map {|e| convert_value(e) }
         else
           val
       end
