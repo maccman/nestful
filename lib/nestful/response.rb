@@ -10,6 +10,10 @@ module Nestful
       @parser ||= @format && @format.new
     end
 
+    def to_s
+      body
+    end
+
     def as_json
       decoded
     end
