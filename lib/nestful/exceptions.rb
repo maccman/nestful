@@ -11,7 +11,14 @@ module Nestful
       message = "Failed."
       message << "  Response code = #{response.code}." if response.respond_to?(:code)
       message << "  Response message = #{response.message}." if response.respond_to?(:message)
-      message << "  Response Body = #{response.body}." if response.respond_to?(:body)
+
+      if response.respond_to?(:body)
+        # Error messages need to be in UTF-8
+        body = response.body.dup.to_s
+        body = body.encode('UTF-8', :invalid => :replace, :undef => :replace, :replace => '?')
+        message << "  Response Body = #{body}."
+      end
+
       message
     end
   end
