@@ -62,7 +62,8 @@ module Nestful
     rescue OpenSSL::SSL::SSLError => e
       raise SSLError.new(e.message)
     rescue SocketError, Errno::ECONNREFUSED,
-           Errno::ETIMEDOUT, Errno::ENETUNREACH => e
+           Errno::ETIMEDOUT, Errno::ENETUNREACH,
+           Errno::ECONNRESET => e
       raise ErrnoError.new(e.message)
     end
 
