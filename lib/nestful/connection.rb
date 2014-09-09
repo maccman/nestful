@@ -57,12 +57,20 @@ module Nestful
 
       handle_response(response)
 
-    rescue Timeout::Error => e
+    rescue Timeout::Error, Net::OpenTimeout => e
       raise TimeoutError.new(e.message)
     rescue OpenSSL::SSL::SSLError => e
       raise SSLError.new(e.message)
-    rescue SocketError, Errno::ECONNREFUSED,
-           Errno::ETIMEDOUT, Errno::ENETUNREACH,
+    rescue SocketError,
+           EOFError,
+           Net::HTTPBadResponse,
+           Net::HTTPHeaderSyntaxError,
+           Net::ProtocolError,
+           Errno::ECONNREFUSED,
+           Errno::ETIMEDOUT,
+           Errno::ENETUNREACH,
+           Errno::EHOSTUNREACH,
+           Errno::EINVAL,
            Errno::ECONNRESET => e
       raise ErrnoError.new(e.message)
     end
