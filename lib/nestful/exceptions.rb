@@ -51,6 +51,10 @@ module Nestful
     def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
   end
 
+  class RedirectionLoop < ConnectionError # :nodoc:
+    def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
+  end
+
   # 4xx Client Error
   class ClientError < ConnectionError; end # :nodoc:
 

@@ -6,4 +6,5 @@ gemspec
 group :test do
   gem 'webmock'
   gem 'rake'
+  gem 'net-http-spy'
 end

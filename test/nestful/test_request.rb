@@ -59,6 +59,12 @@ class TestRequest < MiniTest::Unit::TestCase
     assert_requested(:post, 'http://example.com/v1/tokens', :body => '{"card":{"number":4242,"exp_month":12}}', :headers => {'Content-Type' => 'application/json'})
   end
 
+  def test_form_and_query_params
+    stub_request(:any, 'http://example.com/v1/tokens?query=123')
+    Nestful::Request.new('http://example.com/v1/tokens?query=123', :method => :post, :params => {:number => 4242, :exp_month => 12}).execute
+    assert_requested(:post, 'http://example.com/v1/tokens?query=123', :body => 'number=4242&exp_month=12')
+  end
+
   def test_timeout
     skip # TODO
   end
