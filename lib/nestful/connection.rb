@@ -74,7 +74,7 @@ module Nestful
            Errno::ECONNRESET => e
       raise ErrnoError.new(e.message)
     rescue Zlib::DataError,
-           Zlib::BufError =>
+           Zlib::BufError => e
       raise ZlibError.new(e.message)
     end
 
