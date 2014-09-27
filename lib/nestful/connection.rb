@@ -73,6 +73,9 @@ module Nestful
            Errno::EINVAL,
            Errno::ECONNRESET => e
       raise ErrnoError.new(e.message)
+    rescue Zlib::DataError,
+           Zlib::BufError =>
+      raise ZlibError.new(e.message)
     end
 
     # Handles response and error codes from the remote service.

@@ -46,6 +46,13 @@ module Nestful
     def to_s; @message ;end
   end
 
+  class ZlibError < ConnectionError
+    def initialize(message)
+      @message = message
+    end
+    def to_s; @message ;end
+  end
+
   # 3xx Redirection
   class Redirection < ConnectionError # :nodoc:
     def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
