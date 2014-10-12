@@ -99,7 +99,8 @@ module Nestful
         raise error unless error.response['Location']
         raise RedirectionLoop.new(error.response) if attempts > max_attempts
 
-        location = URI.parse(error.response['Location'])
+        location = error.response['Location'].scrub
+        location = URI.parse(location)
 
         # Path is relative
         unless location.host
