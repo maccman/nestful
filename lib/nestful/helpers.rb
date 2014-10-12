@@ -79,7 +79,7 @@ module Nestful
     end
 
     def uri_escape(s)
-      URI.escape(s.to_s.strip)
+      URI.escape(s.to_s.scrub)
     end
 
     if defined?(::Encoding)
