@@ -71,7 +71,8 @@ module Nestful
            Errno::ENETUNREACH,
            Errno::EHOSTUNREACH,
            Errno::EINVAL,
-           Errno::ECONNRESET => e
+           Errno::ECONNRESET,
+           Errno::ENOPROTOOPT => e
       raise ErrnoError.new(e.message)
     rescue Zlib::DataError,
            Zlib::BufError => e
