@@ -65,13 +65,15 @@ module Nestful
            EOFError,
            Net::HTTPBadResponse,
            Net::HTTPHeaderSyntaxError,
+           Net::HTTPServerException,
            Net::ProtocolError,
+           Errno::ECONNABORTED,
            Errno::ECONNREFUSED,
+           Errno::ECONNRESET,
            Errno::ETIMEDOUT,
            Errno::ENETUNREACH,
            Errno::EHOSTUNREACH,
            Errno::EINVAL,
-           Errno::ECONNRESET,
            Errno::ENOPROTOOPT => e
       raise ErrnoError.new(e.message)
     rescue Zlib::DataError,
