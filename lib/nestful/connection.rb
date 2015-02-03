@@ -44,6 +44,10 @@ module Nestful
       request(:put, path, body, headers, &block)
     end
 
+    def patch(path, body = '', headers = {}, &block)
+      request(:patch, path, body, headers, &block)
+    end
+
     def post(path, body = '', headers = {}, &block)
       request(:post, path, body, headers, &block)
     end
