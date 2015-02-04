@@ -48,6 +48,10 @@ module Nestful
       request(:post, path, body, headers, &block)
     end
 
+    def patch(path, body = '', headers = {}, &block)
+      request(:patch, path, body, headers, &block)
+    end
+
     protected
 
     # Makes a request to the remote service.
