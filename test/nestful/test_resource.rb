@@ -49,6 +49,13 @@ class TestResource < MiniTest::Unit::TestCase
     assert_requested(:put, 'http://example.com/v1/charges/1/capture')
   end
 
+  def test_instance_patch
+    stub_request(:any, 'http://example.com/v1/charges/1/capture')
+    charge = Charge.new({:id => 1})
+    charge.patch(:capture)
+    assert_requested(:patch, 'http://example.com/v1/charges/1/capture')
+  end
+
   def test_defaults
     stub_request(:any, 'http://example.com/v1/tokens/1/capture?one=1')
     charge = Token.new({:id => 1})

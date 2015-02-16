@@ -31,6 +31,10 @@ module Nestful
       request(options.merge(:method => :post, :params => params))
     end
 
+    def patch(params = {}, options = {})
+      request(options.merge(:method => :patch, :params => params))
+    end
+
     def delete(params = {}, options = {})
       request(options.merge(:method => :delete, :params => params))
     end

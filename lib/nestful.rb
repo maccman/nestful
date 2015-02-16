@@ -25,6 +25,10 @@ module Nestful
     Endpoint[url].put(*args)
   end
 
+  def patch(url, *args)
+    Endpoint[url].patch(*args)
+  end
+
   def delete(url, *args)
     Endpoint[url].delete(*args)
   end

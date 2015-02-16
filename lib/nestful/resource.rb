@@ -49,6 +49,10 @@ module Nestful
       request(uri(action), options.merge(:method => :put, :params => params))
     end
 
+    def self.patch(action = '', params = {}, options = {})
+      request(uri(action), options.merge(:method => :patch, :params => params))
+    end
+
     def self.post(action = '', params = {}, options = {})
       request(uri(action), options.merge(:method => :post, :params => params))
     end
@@ -90,6 +94,10 @@ module Nestful
 
     def put(action = '', *args)
       self.class.put(path(action), *args)
+    end
+
+    def patch(action = '', *args)
+      self.class.patch(path(action), *args)
     end
 
     def post(action = '', *args)

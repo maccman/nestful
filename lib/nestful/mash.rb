@@ -12,6 +12,10 @@ module Nestful
       from_response(Nestful.put(*args))
     end
 
+    def self.patch(*args)
+      from_response(Nestful.patch(*args))
+    end
+
     def self.delete(*args)
       from_response(Nestful.delete(*args))
     end
