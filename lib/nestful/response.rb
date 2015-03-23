@@ -1,10 +1,11 @@
 module Nestful
   class Response
-    attr_reader :response, :body, :headers, :parser
+    attr_reader :response, :location, :body, :headers, :parser
 
-    def initialize(response, parser = nil)
+    def initialize(response, location)
       @response = response
       @body     = response.body
+      @location = location
       @headers  = Headers.new(response.to_hash)
       @format   = Formats.for(headers.content_type)
       @parser ||= @format && @format.new

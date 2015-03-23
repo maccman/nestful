@@ -82,7 +82,7 @@ module Nestful
           result = connection.send(method, query_path, build_headers)
         end
 
-        Response.new(result)
+        Response.new(result, uri)
       end
     end
 
