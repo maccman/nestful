@@ -5,17 +5,18 @@ module Nestful
     attr_accessor :params, :body, :method, :headers,
                   :proxy, :user, :password,
                   :auth_type, :timeout, :ssl_options,
-                  :max_attempts
+                  :max_attempts, :follow_redirection
 
     def initialize(url, options = {})
       @url     = url.to_s
 
       @options = {
-        :method  => :get,
-        :params  => {},
-        :headers => {},
-        :format  => :form,
-        :max_attempts => 5
+        :method           => :get,
+        :params           => {},
+        :headers          => {},
+        :format           => :form,
+        :max_attempts     => 5,
+        :follow_redirection => true
       }.merge(options)
 
       @options.each do |key, val|
@@ -94,6 +95,8 @@ module Nestful
       begin
         yield
       rescue Redirection => error
+        raise error unless follow_redirection
+
         attempts += 1
 
         raise error unless error.response['Location']
