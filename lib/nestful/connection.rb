@@ -84,10 +84,10 @@ module Nestful
     # Handles response and error codes from the remote service.
     def handle_response(response)
       case response.code.to_i
-        when 301,302
-          raise Redirection.new(response)
-        when 200...400
+        when 200...299
           response
+        when 300..399
+          raise Redirection.new(response)
         when 400
           raise BadRequest.new(response)
         when 401
