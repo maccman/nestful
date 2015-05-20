@@ -78,8 +78,12 @@ module Nestful
       URI.encode_www_form_component(s.to_s)
     end
 
+    ESCAPE_RE = /[^a-zA-Z0-9 .~_-]/
+
     def uri_escape(s)
-      URI.escape(s.to_s.scrub)
+      s.to_s.gsub(ESCAPE_RE) {|match|
+        '%' + match.unpack('H2' * match.bytesize).join('%').upcase
+      }.tr(' ', '+')
     end
 
     if defined?(::Encoding)
