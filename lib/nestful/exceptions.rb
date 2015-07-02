@@ -1,5 +1,17 @@
 module Nestful
-  class ConnectionError < StandardError # :nodoc:
+  class Error < StandardError; end
+
+  class RequestError < Error
+    def initialize(message)
+      @message = message
+    end
+
+    def to_s
+      @message
+    end
+  end
+
+  class ResponseError < Error
     attr_reader :response
 
     def initialize(response, message = nil)
@@ -24,46 +36,30 @@ module Nestful
   end
 
   # Raised when a Timeout::Error occurs.
-  class TimeoutError < ConnectionError
-    def initialize(message)
-      @message = message
-    end
-    def to_s; @message ;end
+  class TimeoutError < RequestError
   end
 
   # Raised when a OpenSSL::SSL::SSLError occurs.
-  class SSLError < ConnectionError
-    def initialize(message)
-      @message = message
-    end
-    def to_s; @message ;end
+  class SSLError < RequestError
   end
 
-  class ErrnoError < ConnectionError
-    def initialize(message)
-      @message = message
-    end
-    def to_s; @message ;end
+  class ErrnoError < RequestError
   end
 
-  class ZlibError < ConnectionError
-    def initialize(message)
-      @message = message
-    end
-    def to_s; @message ;end
+  class ZlibError < RequestError
   end
 
   # 3xx Redirection
-  class Redirection < ConnectionError # :nodoc:
+  class Redirection < ResponseError # :nodoc:
     def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
   end
 
-  class RedirectionLoop < ConnectionError # :nodoc:
+  class RedirectionLoop < ResponseError # :nodoc:
     def to_s; response['Location'] ? "#{super} => #{response['Location']}" : super; end
   end
 
   # 4xx Client Error
-  class ClientError < ConnectionError; end # :nodoc:
+  class ClientError < ResponseError; end # :nodoc:
 
   # 400 Bad Request
   class BadRequest < ClientError; end # :nodoc
@@ -87,7 +83,7 @@ module Nestful
   class ResourceInvalid < ClientError; end # :nodoc:
 
   # 5xx Server Error
-  class ServerError < ConnectionError; end # :nodoc:
+  class ServerError < ResponseError; end # :nodoc:
 
   # 405 Method Not Allowed
   class MethodNotAllowed < ClientError # :nodoc:
