@@ -35,6 +35,8 @@ module Nestful
     end
   end
 
+  ConnectionError = ResponseError
+
   # Raised when a Timeout::Error occurs.
   class TimeoutError < RequestError
   end
