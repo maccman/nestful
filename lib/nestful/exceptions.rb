@@ -1,5 +1,6 @@
 module Nestful
   class Error < StandardError; end
+  ConnectionError = Error
 
   class RequestError < Error
     def initialize(message)
@@ -34,8 +35,6 @@ module Nestful
       message
     end
   end
-
-  ConnectionError = ResponseError
 
   # Raised when a Timeout::Error occurs.
   class TimeoutError < RequestError
