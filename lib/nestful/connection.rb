@@ -109,7 +109,7 @@ module Nestful
         when 500...600
           raise ServerError.new(response)
         else
-          raise ConnectionError.new(
+          raise ResponseError.new(
             response, "Unknown response code: #{response.code}"
           )
       end
