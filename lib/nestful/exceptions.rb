@@ -1,23 +1,22 @@
 module Nestful
-  class Error < StandardError; end
-  ConnectionError = Error
+  class Error < StandardError
+    attr_reader :request
 
-  class RequestError < Error
-    def initialize(message)
-      @message = message
-    end
-
-    def to_s
-      @message
+    def initialize(request = nil, message = nil)
+      super(message)
+      @request = request
     end
   end
+
+  ConnectionError = Error
+  RequestError = Error
 
   class ResponseError < Error
     attr_reader :response
 
-    def initialize(response, message = nil)
+    def initialize(request, response, message = nil)
+      super(request, message)
       @response = response
-      @message  = message
     end
 
     def to_s

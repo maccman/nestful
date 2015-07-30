@@ -35,6 +35,16 @@ class TestResponse < MiniTest::Unit::TestCase
     assert_equal 201, response.status
   end
 
+  def test_errors_include_request
+    stub_request(:any, 'http://example.com/v1/charges').to_return(:status => 404)
+
+    begin
+      Nestful.get('http://example.com/v1/charges')
+    rescue Nestful::ResourceNotFound => e
+      assert_equal 'http://example.com/v1/charges', e.request.uri.to_s
+    end
+  end
+
   def test_raises_404
     stub_request(:any, 'http://example.com/v1/charges').to_return(:status => 404)
 

@@ -50,6 +50,10 @@ module Nestful
 
     protected
 
+    def request=(request)
+      @request = request
+    end
+
     # Makes a request to the remote service.
     def request(method, path, *arguments)
       response = http.send(method, path, *arguments)
@@ -58,9 +62,9 @@ module Nestful
       handle_response(response)
 
     rescue Timeout::Error, Net::OpenTimeout => e
-      raise TimeoutError.new(e.message)
+      raise TimeoutError.new(@request, e.message)
     rescue OpenSSL::SSL::SSLError => e
-      raise SSLError.new(e.message)
+      raise SSLError.new(@request, e.message)
     rescue SocketError,
            EOFError,
            Net::HTTPBadResponse,
@@ -75,10 +79,10 @@ module Nestful
            Errno::EHOSTUNREACH,
            Errno::EINVAL,
            Errno::ENOPROTOOPT => e
-      raise ErrnoError.new(e.message)
+      raise ErrnoError.new(@request, e.message)
     rescue Zlib::DataError,
            Zlib::BufError => e
-      raise ZlibError.new(e.message)
+      raise ZlibError.new(@request, e.message)
     end
 
     # Handles response and error codes from the remote service.
@@ -87,30 +91,30 @@ module Nestful
       when 200...299
         response
       when 300..399
-        raise Redirection.new(response)
+        raise Redirection.new(@request, response)
       when 400
-        raise BadRequest.new(response)
+        raise BadRequest.new(@request, response)
       when 401
-        raise UnauthorizedAccess.new(response)
+        raise UnauthorizedAccess.new(@request, response)
       when 403
-        raise ForbiddenAccess.new(response)
+        raise ForbiddenAccess.new(@request, response)
       when 404
-        raise ResourceNotFound.new(response)
+        raise ResourceNotFound.new(@request, response)
       when 405
-        raise MethodNotAllowed.new(response)
+        raise MethodNotAllowed.new(@request, response)
       when 409
-        raise ResourceConflict.new(response)
+        raise ResourceConflict.new(@request, response)
       when 410
-        raise ResourceGone.new(response)
+        raise ResourceGone.new(@request, response)
       when 422
-        raise ResourceInvalid.new(response)
+        raise ResourceInvalid.new(@request, response)
       when 401...500
-        raise ClientError.new(response)
+        raise ClientError.new(@request, response)
       when 500...600
-        raise ServerError.new(response)
+        raise ServerError.new(@request, response)
       else
         raise ResponseError.new(
-          response, "Unknown response code: #{response.code}"
+          @request, response, "Unknown response code: #{response.code}"
         )
       end
     end

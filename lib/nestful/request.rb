@@ -119,7 +119,8 @@ module Nestful
       Connection.new(uri,
         :proxy       => proxy,
         :timeout     => timeout,
-        :ssl_options => ssl_options
+        :ssl_options => ssl_options,
+        :request     => self
       )
     end
 
