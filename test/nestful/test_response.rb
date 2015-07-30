@@ -41,7 +41,7 @@ class TestResponse < MiniTest::Unit::TestCase
     begin
       Nestful.get('http://example.com/v1/charges')
     rescue Nestful::ResourceNotFound => e
-      assert_equal 'http://example.com/v1/charges', e.request.uri.to_s
+      assert_equal 'http://example.com/v1/charges', e.request.url
     end
   end
 
