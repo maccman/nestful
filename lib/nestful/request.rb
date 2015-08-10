@@ -100,7 +100,7 @@ module Nestful
         attempts += 1
 
         raise error unless error.response['Location']
-        raise RedirectionLoop.new(error.response) if attempts > max_attempts
+        raise RedirectionLoop.new(self, error.response) if attempts > max_attempts
 
         location = error.response['Location'].scrub
         location = URI.parse(location)
@@ -119,7 +119,8 @@ module Nestful
       Connection.new(uri,
         :proxy       => proxy,
         :timeout     => timeout,
-        :ssl_options => ssl_options
+        :ssl_options => ssl_options,
+        :request     => self
       )
     end
 
