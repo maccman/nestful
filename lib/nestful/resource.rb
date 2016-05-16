@@ -4,19 +4,19 @@ module Nestful
   class Resource
     def self.endpoint(value = nil)
       @endpoint = value if value
-      return @endpoint if @endpoint
+      return @endpoint if defined?(@endpoint) && @endpoint
       superclass.respond_to?(:endpoint) ? superclass.endpoint : nil
     end
 
     def self.path(value = nil)
       @path = value if value
-      return @path if @path
+      return @path if defined?(@path) && @path
       superclass.respond_to?(:path) ? superclass.path : nil
     end
 
     def self.defaults(value = nil)
       @defaults = value if value
-      return @defaults if @defaults
+      return @defaults if defined?(@defaults) && @defaults
       superclass.respond_to?(:defaults) ? superclass.defaults : {}
     end
 
@@ -71,7 +71,7 @@ module Nestful
 
     def self.new(attributes = {})
       if attributes.is_a?(Array)
-        attributes.map {|set| super(set) }
+        attributes.map { |set| super(set) }
       else
         super
       end
@@ -101,7 +101,7 @@ module Nestful
     end
 
     def path(*parts)
-      Helpers.to_path(self.id, *parts)
+      Helpers.to_path(id, *parts)
     end
 
     def id #:nodoc:
@@ -172,9 +172,9 @@ module Nestful
 
       if method_name =~ /(=|\?)$/
         case $1
-        when "="
+        when '='
           attributes[$`] = arguments.first
-        when "?"
+        when '?'
           attributes[$`]
         end
       else

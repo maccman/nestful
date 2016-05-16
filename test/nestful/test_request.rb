@@ -4,7 +4,7 @@ require 'nestful'
 
 WebMock.disable_net_connect!
 
-class TestRequest < MiniTest::Unit::TestCase
+class TestRequest < MiniTest::Test
   def test_get
     stub_request(:any, 'http://example.com/v1/tokens')
     Nestful::Request.new('http://example.com/v1/tokens', :method => :get).execute

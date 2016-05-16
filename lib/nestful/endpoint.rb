@@ -1,7 +1,7 @@
 module Nestful
   class Endpoint
     def self.[](url)
-      self.new(url)
+      new(url)
     end
 
     attr_reader :url
@@ -15,7 +15,7 @@ module Nestful
       return self if suburl.nil?
       suburl = suburl.to_s
       base   = url
-      base  += "/" unless base =~ /\/$/
+      base  += '/' unless base.end_with?('/')
       self.class.new(URI.join(base, suburl).to_s, @options)
     end
 
