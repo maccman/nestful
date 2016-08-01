@@ -8,6 +8,14 @@ module Nestful
                   :max_attempts, :follow_redirection,
                   :instrumentor
 
+    def self.default_instrumentor=(klass)
+      @default_instrumentor = klass
+    end
+
+    def self.default_instrumentor
+      @default_instrumentor ||= Nestful::DefaultInstrumentor
+    end
+
     def initialize(url, options = {})
       @url     = url.to_s
       @uri     = nil
@@ -184,7 +192,7 @@ module Nestful
         path:   query_path
       )
 
-      @instrumentor ||= Nestful::DefaultInstrumentor
+      @instrumentor ||= self.class.default_instrumentor
       @instrumentor.instrument(event, payload, &block)
     end
   end
