@@ -26,7 +26,7 @@ module Nestful
 
       if response.respond_to?(:body)
         # Error messages need to be in UTF-8
-        body = response.body.dup.to_s
+        body = response.body.to_s.dup
         body = body.encode('UTF-8', :invalid => :replace, :undef => :replace, :replace => '?')
         message << "  Response Body = #{body}."
       end

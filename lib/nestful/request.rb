@@ -5,18 +5,28 @@ module Nestful
     attr_accessor :params, :body, :method, :headers,
                   :proxy, :user, :password,
                   :auth_type, :timeout, :ssl_options,
-                  :max_attempts, :follow_redirection
+                  :max_attempts, :follow_redirection,
+                  :instrumentor
+
+    def self.default_instrumentor=(klass)
+      @default_instrumentor = klass
+    end
+
+    def self.default_instrumentor
+      @default_instrumentor ||= Nestful::DefaultInstrumentor
+    end
 
     def initialize(url, options = {})
       @url     = url.to_s
+      @uri     = nil
 
       @options = {
-        :method           => :get,
-        :params           => {},
-        :headers          => {},
-        :format           => :form,
-        :max_attempts     => 5,
-        :follow_redirection => true
+        method:             :get,
+        params:             {},
+        headers:            {},
+        format:             :form,
+        max_attempts:       5,
+        follow_redirection: true
       }.merge(options)
 
       @options.each do |key, val|
@@ -77,17 +87,44 @@ module Nestful
 
     def execute
       with_redirection do
-        if encoded?
-          result = connection.send(method, query_path, encoded, build_headers)
-        else
-          result = connection.send(method, query_path, build_headers)
+        result = instrument_request do
+          if encoded?
+            connection.send(method, query_path, encoded, build_headers)
+          else
+            connection.send(method, query_path, build_headers)
+          end
         end
 
-        Response.new(result, uri)
+        response = Response.new(result, uri)
+        instrument_response(response)
+
+        response
       end
+    ensure
+      instrument_error($!) if $!
     end
 
     protected
+
+    def instrument_request(&block)
+      instrument('request.nestful', request: self, &block)
+    end
+
+    def instrument_error(error)
+      if error.respond_to?(:response) && error.response
+        instrument_response(error.response)
+      end
+      instrument('error.nestful', request: self, error: error)
+    end
+
+    def instrument_response(response)
+      instrument(
+        'response.nestful',
+        request:  self,
+        response: response,
+        code:     response.code.to_i
+      )
+    end
 
     def with_redirection(&block)
       attempts = 1
@@ -117,16 +154,16 @@ module Nestful
 
     def connection
       Connection.new(uri,
-        :proxy       => proxy,
-        :timeout     => timeout,
-        :ssl_options => ssl_options,
-        :request     => self
+        proxy:       proxy,
+        timeout:     timeout,
+        ssl_options: ssl_options,
+        request:     self
       )
     end
 
     def content_type_headers
       if encoded?
-        {'Content-Type' => format.mime_type}
+        { 'Content-Type' => format.mime_type }
       else
         {}
       end
@@ -138,7 +175,7 @@ module Nestful
       elsif auth_type == :basic
         { 'Authorization' => 'Basic ' + ["#{@user}:#{@password}"].pack('m').delete("\r\n") }
       else
-        { }
+        {}
       end
     end
 
@@ -146,6 +183,17 @@ module Nestful
       auth_headers
         .merge(content_type_headers)
         .merge(headers)
+    end
+
+    def instrument(event, payload, &block)
+      payload.merge!(
+        domain: uri.host,
+        method: method,
+        path:   query_path
+      )
+
+      @instrumentor ||= self.class.default_instrumentor
+      @instrumentor.instrument(event, payload, &block)
     end
   end
 end

@@ -4,7 +4,7 @@ require 'nestful'
 
 WebMock.disable_net_connect!
 
-class TestResource < MiniTest::Unit::TestCase
+class TestResource < MiniTest::Test
   class Charge < Nestful::Resource
     endpoint 'http://example.com'
     path '/v1/charges'
@@ -14,9 +14,6 @@ class TestResource < MiniTest::Unit::TestCase
     endpoint 'http://example.com'
     path '/v1/tokens'
     defaults :params => {:one => 1}
-  end
-
-  def setup
   end
 
   def test_get

@@ -54,14 +54,6 @@ module Nestful
       end
     end
 
-    def from_param(param)
-      Rack::Utils.parse_nested_query(param)
-      (value || '').split('&').each do |res|
-        key, value = res.split('=')
-        @params[key] = value
-      end
-    end
-
     def from_param(qs, d = nil)
       params = {}
 

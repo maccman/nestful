@@ -1,6 +1,6 @@
 begin
   require 'json'
-rescue LoadError => e
+rescue LoadError
   require 'json/pure'
 end
 
