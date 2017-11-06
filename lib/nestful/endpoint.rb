@@ -20,23 +20,26 @@ module Nestful
     end
 
     def get(params = {}, options = {})
-      request(options.merge(:method => :get, :params => params))
+      request(:get, params, options)
     end
 
     def put(params = {}, options = {})
-      request(options.merge(:method => :put, :params => params))
+      request(:put, params, options)
     end
 
     def post(params = {}, options = {})
-      request(options.merge(:method => :post, :params => params))
+      request(:post, params, options)
     end
 
     def delete(params = {}, options = {})
-      request(options.merge(:method => :delete, :params => params))
+      request(:delete, params, options)
     end
 
-    def request(options = {})
-      Request.new(url, options.merge(@options)).execute
+    private
+
+    def request(method, params, options)
+      options = @options.merge(options.merge(:method => method, :params => params))
+      Request.new(url, options).execute
     end
   end
 end
