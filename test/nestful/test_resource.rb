@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestResource < MiniTest::Unit::TestCase
+class TestResource < Minitest::Test
   class Charge < Nestful::Resource
     endpoint 'http://example.com'
     path '/v1/charges'

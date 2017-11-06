@@ -16,7 +16,7 @@ module Nestful
 
     def self.defaults(value = nil)
       @defaults = value if value
-      return @defaults if @defaults
+      return @defaults if defined?(@defaults) && @defaults
       superclass.respond_to?(:defaults) ? superclass.defaults : {}
     end
 

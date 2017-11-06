@@ -37,7 +37,7 @@ module Nestful
     end
 
     def uri
-      return @uri if @uri
+      return @uri if defined?(@uri) && @uri
 
       url = @url.match(/\Ahttps?:\/\//) ? @url : "http://#{@url}"
 

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestRequest < MiniTest::Unit::TestCase
+class TestRequest < Minitest::Test
   def test_get
     stub_request(:any, 'http://example.com/v1/tokens')
     Nestful::Request.new('http://example.com/v1/tokens', :method => :get).execute

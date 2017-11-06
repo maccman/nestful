@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TestResponse < MiniTest::Unit::TestCase
+class TestResponse < Minitest::Test
   def test_headers
     stub_request(:any, 'http://example.com/v1/charges').to_return(:headers => {'X-TEST' => 'BAR'})
     response = Nestful.get('http://example.com/v1/charges')
