@@ -1,10 +1,6 @@
-require 'minitest/autorun'
-require 'webmock/minitest'
-require 'nestful'
+require 'test_helper'
 
-WebMock.disable_net_connect!
-
-class TestResource < MiniTest::Unit::TestCase
+class TestResource < Minitest::Test
   class Charge < Nestful::Resource
     endpoint 'http://example.com'
     path '/v1/charges'
