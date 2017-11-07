@@ -1,5 +1,7 @@
 module Nestful
   class Request
+    UriParser = URI.const_defined?(:Parser) ? URI::Parser.new : URI
+
     attr_reader :options, :format, :url
 
     attr_accessor :params, :body, :method, :headers,
@@ -41,7 +43,7 @@ module Nestful
 
       url = @url.match(/\Ahttps?:\/\//) ? @url : "http://#{@url}"
 
-      @uri = URI.parse(url)
+      @uri = UriParser.parse(url)
       @uri.path = '/' if @uri.path.empty?
 
       @uri
@@ -103,12 +105,14 @@ module Nestful
         raise RedirectionLoop.new(self, error.response) if attempts > max_attempts
 
         location = error.response['Location'].scrub
-        location = URI.parse(location)
+        location = UriParser.parse(location)
 
         # Path is relative
         unless location.host
           location = URI.join(uri, location)
         end
+
+        location.scheme = uri.scheme unless location.scheme
 
         self.url = location.to_s
         retry
