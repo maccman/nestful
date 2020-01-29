@@ -73,7 +73,7 @@ module Nestful
            EOFError,
            Net::HTTPBadResponse,
            Net::HTTPHeaderSyntaxError,
-           Net::HTTPServerException,
+           Object.const_defined?('Net::HTTPClientException') ? Net::HTTPClientException : Net::HTTPServerException, # Net::HTTPServerException deprecated in Ruby 2.6, replaced by Net::HTTPClientException.
            Net::ProtocolError,
            Errno::ECONNABORTED,
            Errno::ECONNREFUSED,
