@@ -1,3 +1,5 @@
+require 'net/http'
+
 module Nestful
   class Response #:nodoc:
     class Headers
