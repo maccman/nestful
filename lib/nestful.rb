@@ -32,4 +32,8 @@ module Nestful
   def request(url, *args)
     Endpoint[url].request(*args)
   end
+
+  def json_put(url, options = {})
+    put(url, {:format => :json}.merge(options))
+  end
 end
