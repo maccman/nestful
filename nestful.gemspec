@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["info@eribium.org"]
   gem.summary       = %q{Simple Ruby HTTP/REST client with a sane API}
   gem.homepage      = "https://github.com/maccman/nestful"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
